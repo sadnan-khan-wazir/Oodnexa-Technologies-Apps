@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--                  DEFAULT CATEGORIES                          -->
+    <!-- ============================================================ -->
+    <data noupdate="1">
+        <record id="category_crm" model="whatsapp.automation.category">
+            <field name="name">CRM &amp; Leads</field>
+            <field name="code">crm</field>
+            <field name="sequence">1</field>
+            <field name="description">Rules related to CRM leads, opportunities, and follow-ups.</field>
+        </record>
+        <record id="category_sales" model="whatsapp.automation.category">
+            <field name="name">Sales &amp; Orders</field>
+            <field name="code">sales</field>
+            <field name="sequence">2</field>
+            <field name="description">Order confirmations, quotation follow-ups, and sales updates.</field>
+        </record>
+        <record id="category_delivery" model="whatsapp.automation.category">
+            <field name="name">Delivery &amp; Shipping</field>
+            <field name="code">delivery</field>
+            <field name="sequence">3</field>
+            <field name="description">Delivery status updates and shipping notifications.</field>
+        </record>
+        <record id="category_invoice" model="whatsapp.automation.category">
+            <field name="name">Invoicing &amp; Payments</field>
+            <field name="code">invoice</field>
+            <field name="sequence">4</field>
+            <field name="description">Invoice reminders, payment confirmations, and overdue notices.</field>
+        </record>
+        <record id="category_reminder" model="whatsapp.automation.category">
+            <field name="name">Reminders</field>
+            <field name="code">reminder</field>
+            <field name="sequence">5</field>
+            <field name="description">General scheduled reminders and date-based notifications.</field>
+        </record>
+        <record id="category_campaign" model="whatsapp.automation.category">
+            <field name="name">Campaigns</field>
+            <field name="code">campaign</field>
+            <field name="sequence">6</field>
+            <field name="description">Marketing campaigns and promotional messages.</field>
+        </record>
+        <record id="category_general" model="whatsapp.automation.category">
+            <field name="name">General</field>
+            <field name="code">general</field>
+            <field name="sequence">99</field>
+            <field name="description">General purpose automation rules.</field>
+        </record>
+    </data>
+</odoo>

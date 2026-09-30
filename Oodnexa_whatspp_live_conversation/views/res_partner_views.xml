@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--              RES.PARTNER VIEWS                               -->
+    <!-- ============================================================ -->
+
+    <record id="view_partner_form_wa" model="ir.ui.view">
+        <field name="name">res.partner.form.whatsapp.automation</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_wa_messages" type="object"
+                        class="oe_stat_button" icon="fa-whatsapp"
+                        groups="Oodnexa_whatspp_live_conversation.group_wa_user">
+                    <field name="wa_message_count" widget="statinfo" string="WA Messages"/>
+                </button>
+            </xpath>
+            <xpath expr="//page[@name='internal_notes']" position="after">
+                <page string="WhatsApp" name="whatsapp_tab"
+                      groups="Oodnexa_whatspp_live_conversation.group_wa_user">
+                    <div class="o_horizontal_separator mb-2">WhatsApp Actions</div>
+                    <div class="mb-3">
+                        <button name="action_open_whatsapp_chat"
+                                string="Open WhatsApp Live Chat"
+                                type="object"
+                                class="btn btn-success me-2"
+                                icon="fa-comments"/>
+                        <button name="action_open_whatsapp_portal_wizard"
+                                string="Send Customer Portal Link (WhatsApp)"
+                                type="object"
+                                class="btn btn-primary"
+                                icon="fa-whatsapp"/>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="wa_opt_in"/>
+                            <field name="wa_blacklisted"/>
+                        </group>
+                        <group>
+                            <field name="wa_last_message_at"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_partner_send_portal_wa" model="ir.actions.act_window">
+        <field name="name">Send Portal Link via WhatsApp</field>
+        <field name="res_model">whatsapp.automation.send.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="base.model_res_partner"/>
+        <field name="binding_view_types">form</field>
+        <field name="context">{
+            'default_res_model': 'res.partner',
+            'default_res_id': active_id,
+            'default_partner_id': active_id,
+            'default_attach_pdf': False,
+        }</field>
+    </record>
+</odoo>

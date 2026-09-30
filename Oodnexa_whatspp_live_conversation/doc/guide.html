@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>whatsapp Live conversation - Complete Configuration & User Manual</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 18mm 15mm 18mm 15mm;
+            @bottom-right {
+                content: counter(page);
+            }
+        }
+        body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            color: #1E293B;
+            line-height: 1.55;
+            font-size: 10.5pt;
+            margin: 0;
+            padding: 0;
+        }
+        h1, h2, h3, h4, h5 {
+            color: #0F172A;
+            font-weight: 700;
+            page-break-after: avoid;
+        }
+        h1 {
+            font-size: 24pt;
+            color: #075E54;
+            margin-bottom: 6px;
+        }
+        h2 {
+            font-size: 15pt;
+            color: #008069;
+            border-bottom: 2px solid #25D366;
+            padding-bottom: 5px;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+        }
+        h3 {
+            font-size: 12pt;
+            color: #1E293B;
+            margin-top: 14pt;
+            margin-bottom: 6pt;
+        }
+        p {
+            margin-top: 0;
+            margin-bottom: 8pt;
+        }
+        .header-cover {
+            background: linear-gradient(135deg, #075E54 0%, #008069 60%, #111B21 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 25pt;
+        }
+        .header-cover h1 {
+            color: #FFFFFF;
+            font-size: 26pt;
+            margin: 0 0 8px 0;
+        }
+        .header-cover p {
+            color: #E2E8F0;
+            font-size: 12pt;
+            margin-bottom: 12px;
+        }
+        .badge {
+            background-color: #25D366;
+            color: #111B21;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 8.5pt;
+            font-weight: bold;
+            display: inline-block;
+            margin-right: 6px;
+        }
+        .badge-dark {
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+        .step-card {
+            background-color: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-left: 4px solid #008069;
+            padding: 12px 16px;
+            margin-bottom: 14pt;
+            border-radius: 6px;
+            page-break-inside: avoid;
+        }
+        .step-num {
+            display: inline-block;
+            background: #008069;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 22px;
+            font-size: 9.5pt;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+        .alert-box {
+            background-color: #FEF3C7;
+            border: 1px solid #F59E0B;
+            border-left: 4px solid #D97706;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin: 12pt 0;
+            font-size: 9.5pt;
+            page-break-inside: avoid;
+        }
+        .tip-box {
+            background-color: #DCFCE7;
+            border: 1px solid #86EFAC;
+            border-left: 4px solid #22C55E;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin: 12pt 0;
+            font-size: 9.5pt;
+            page-break-inside: avoid;
+        }
+        code {
+            background-color: #F1F5F9;
+            color: #0F172A;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 9pt;
+            border: 1px solid #E2E8F0;
+        }
+        pre {
+            background-color: #0F172A;
+            color: #F8FAFC;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 8.5pt;
+            overflow-x: auto;
+            margin: 8pt 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12pt 0;
+            font-size: 9.5pt;
+            page-break-inside: avoid;
+        }
+        th, td {
+            border: 1px solid #CBD5E1;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #0F172A;
+            color: white;
+            font-weight: 600;
+        }
+        tr:nth-child(even) {
+            background-color: #F8FAFC;
+        }
+        .toc-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            border-bottom: 1px dotted #CBD5E1;
+            font-weight: 500;
+        }
+        .page-break {
+            page-break-before: always;
+        }
+        footer {
+            margin-top: 30pt;
+            border-top: 1px solid #E2E8F0;
+            padding-top: 10pt;
+            font-size: 8.5pt;
+            color: #64748B;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ==================== COVER & HEADER ==================== -->
+    <div class="header-cover">
+        <span class="badge">OFFICIAL USER MANUAL</span>
+        <span class="badge badge-dark">Odoo 19.0 Community & Enterprise</span>
+        <h1 style="margin-top: 12px;">whatsapp Live conversation</h1>
+        <p>Complete End-to-End Configuration & Operations Guide</p>
+        <div style="font-size: 9pt; color: #CBD5E1; margin-top: 10pt;">
+            Technical Name: <strong>Oodnexa_whatspp_live_conversation</strong> &nbsp;|&nbsp; 
+            Author: <strong>Oodnexa Technologies</strong> &nbsp;|&nbsp; 
+            Support: <strong>contact@oodnexa.com</strong>
+        </div>
+    </div>
+
+    <!-- ==================== TABLE OF CONTENTS ==================== -->
+    <h2>Table of Contents</h2>
+    <div style="margin-bottom: 20pt;">
+        <div class="toc-item"><span>1. Architecture & Prerequisites</span><span>Page 1</span></div>
+        <div class="toc-item"><span>2. Phase 1: Meta Developer & WhatsApp Cloud API Setup</span><span>Page 2</span></div>
+        <div class="toc-item"><span>3. Phase 2: Generating Permanent System User Token</span><span>Page 3</span></div>
+        <div class="toc-item"><span>4. Phase 3: Inside Odoo 19 Configuration</span><span>Page 4</span></div>
+        <div class="toc-item"><span>5. Phase 4: Webhook Configuration for 2-Way Live Chat</span><span>Page 5</span></div>
+        <div class="toc-item"><span>6. Phase 5: Using WhatsApp Live Chat & 1-Click Quotations</span><span>Page 6</span></div>
+        <div class="toc-item"><span>7. Phase 6: Voice Notes, Media & Mobile Responsive Usage</span><span>Page 7</span></div>
+        <div class="toc-item"><span>8. Phase 7: Automations, Troubleshooting & Meta FAQ</span><span>Page 8</span></div>
+    </div>
+
+    <!-- ==================== SECTION 1 ==================== -->
+    <h2>1. Architecture & Prerequisites</h2>
+    <p>
+        <strong>Oodnexa WhatsApp Live Conversation</strong> connects Odoo 19 directly to the official <strong>Meta WhatsApp Cloud API</strong> (Graph API v21.0). Unlike legacy solutions that rely on unofficial web scraping or third-party paid gateways (Twilio, MessageBird, Chat-API), this module uses Meta's official cloud endpoints.
+    </p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Prerequisite Item</th>
+                <th>Requirement Specification</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Odoo Instance</strong></td>
+                <td>Odoo 19.0 Community or Enterprise</td>
+                <td>Host ERP running Oodnexa WhatsApp module</td>
+            </tr>
+            <tr>
+                <td><strong>Domain with SSL/HTTPS</strong></td>
+                <td>Valid HTTPS URL (e.g. <code>https://odoo.mycompany.com</code>)</td>
+                <td>Required by Meta for Webhook real-time delivery</td>
+            </tr>
+            <tr>
+                <td><strong>Meta Developer Account</strong></td>
+                <td>Free registration at <code>developers.facebook.com</code></td>
+                <td>Creates the WhatsApp Business App</td>
+            </tr>
+            <tr>
+                <td><strong>Meta Business Portfolio</strong></td>
+                <td>Verified Business Manager account</td>
+                <td>Manages WABA, Phone numbers, and System Users</td>
+            </tr>
+            <tr>
+                <td><strong>Dedicated Phone Number</strong></td>
+                <td>Clean phone number not registered on regular WhatsApp app</td>
+                <td>Official WhatsApp Business sending identity</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="tip-box">
+        <strong>Cost Advantage:</strong> Meta provides <strong>1,000 free service conversations per month</strong> for every WhatsApp Business Account. You pay zero middleman subscription fees to third-party providers.
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- ==================== SECTION 2 ==================== -->
+    <h2>2. Phase 1: Meta Developer & WhatsApp Cloud API Setup</h2>
+    <p>Follow these exact steps in the Meta Developer Console:</p>
+
+    <div class="step-card">
+        <h3><span class="step-num">1</span> Create a Meta Developer Account</h3>
+        <p>1. Navigate to <a href="https://developers.facebook.com/">https://developers.facebook.com/</a> and click <strong>Log In</strong> using your Facebook credentials.</p>
+        <p>2. If you are new, accept the developer terms to activate your developer profile.</p>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">2</span> Create a Meta Business App</h3>
+        <p>1. In the Meta Developer Dashboard, click the green <strong>Create App</strong> button.</p>
+        <p>2. Choose <strong>Other</strong> &rarr; Click <strong>Next</strong>.</p>
+        <p>3. Select the App Type as <strong>Business</strong> (this provides access to WhatsApp Business API).</p>
+        <p>4. Enter your <strong>App Name</strong> (e.g., <em>Oodnexa ERP WhatsApp</em>) and select your <strong>Meta Business Portfolio / Account</strong>.</p>
+        <p>5. Click <strong>Create App</strong>.</p>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">3</span> Add the WhatsApp Product</h3>
+        <p>1. On the App Dashboard product selection screen, locate <strong>WhatsApp</strong>.</p>
+        <p>2. Click <strong>Set Up</strong>.</p>
+        <p>3. Meta will initialize a sandbox environment with a test WhatsApp phone number and test recipient phone number for immediate testing.</p>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">4</span> Add Your Real WhatsApp Business Number</h3>
+        <p>1. Under WhatsApp &rarr; <strong>API Setup</strong>, scroll down to <strong>Step 5: Add a phone number</strong>.</p>
+        <p>2. Click <strong>Add Phone Number</strong>.</p>
+        <p>3. Provide your WhatsApp Business Profile Display Name, Category, and Business Description.</p>
+        <p>4. Enter your dedicated phone number & choose verification method: <strong>SMS</strong> or <strong>Voice Call</strong>.</p>
+        <p>5. Enter the 6-digit verification code. Your number is now registered to Meta Cloud API!</p>
+    </div>
+
+    <div class="alert-box">
+        <strong>Important:</strong> If the phone number is currently active on the WhatsApp consumer or WhatsApp Business mobile app on an iPhone or Android phone, you must delete that account from the WhatsApp app first before registering it to the Meta Cloud API.
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- ==================== SECTION 3 ==================== -->
+    <h2>3. Phase 2: Generating Permanent System User Token</h2>
+    <p>
+        The temporary access token generated in the API Setup tab expires in 24 hours. For production Odoo connectivity, you must create a <strong>Permanent System User Access Token</strong> that never expires.
+    </p>
+
+    <div class="step-card">
+        <h3><span class="step-num">1</span> Open Meta Business Manager Settings</h3>
+        <p>1. Navigate to <strong>Meta Business Settings</strong> at <a href="https://business.facebook.com/settings">https://business.facebook.com/settings</a>.</p>
+        <p>2. Select the Business Account associated with your WhatsApp App.</p>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">2</span> Create a System User</h3>
+        <p>1. In the left navigation menu, go to <strong>Users &rarr; System Users</strong>.</p>
+        <p>2. Click <strong>Add</strong>.</p>
+        <p>3. Set the System User Name (e.g., <code>oodnexa_odoo_integration</code>).</p>
+        <p>4. Set the Role to <strong>Admin</strong>.</p>
+        <p>5. Click <strong>Create System User</strong>.</p>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">3</span> Assign WhatsApp Assets to the System User</h3>
+        <p>1. Select the new System User and click <strong>Add Assets</strong>.</p>
+        <p>2. Under <strong>Apps</strong>, select your WhatsApp Meta App and grant <strong>Full Control (Manage App)</strong>.</p>
+        <p>3. Under <strong>WhatsApp Accounts</strong>, select your WhatsApp Business Account and grant <strong>Full Control (Manage WhatsApp Account)</strong>.</p>
+        <p>4. Click <strong>Save Changes</strong>.</p>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">4</span> Generate Permanent Token with Required Permissions</h3>
+        <p>1. Click <strong>Generate New Token</strong> next to the System User.</p>
+        <p>2. Select your WhatsApp App.</p>
+        <p>3. Set Token Expiration to <strong>Never</strong>.</p>
+        <p>4. Under Permissions, select the following two critical permissions:</p>
+        <ul>
+            <li><code>whatsapp_business_management</code> (Read & manage templates, account info)</li>
+            <li><code>whatsapp_business_messaging</code> (Send & receive messages, media, voice notes)</li>
+        </ul>
+        <p>5. Click <strong>Generate Token</strong>. Copy the token immediately and store it securely.</p>
+    </div>
+
+    <div class="tip-box">
+        <strong>Security Best Practice:</strong> Treat this permanent token like an API password. Odoo encrypts and stores it securely in the database.
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- ==================== SECTION 4 ==================== -->
+    <h2>4. Phase 3: Inside Odoo 19 Configuration</h2>
+    <p>Now configure the Oodnexa WhatsApp integration inside your Odoo backend:</p>
+
+    <div class="step-card">
+        <h3><span class="step-num">1</span> Navigate to WhatsApp Providers</h3>
+        <p>In Odoo, navigate to: <strong>WhatsApp &rarr; Configuration &rarr; Providers</strong>.</p>
+        <p>Open the pre-configured provider or click <strong>New</strong>.</p>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">2</span> Enter Meta Credentials into Odoo</h3>
+        <p>Fill out the provider form with the credentials obtained from the Meta Developer Console:</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>Odoo Field Name</th>
+                    <th>Value from Meta Console</th>
+                    <th>Example / Format</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Provider Name</strong></td>
+                    <td>Friendly identification label</td>
+                    <td><code>Meta WhatsApp Business</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Phone Number ID</strong></td>
+                    <td>API Setup &rarr; Phone number ID</td>
+                    <td><code>123456789012345</code> (numeric ID)</td>
+                </tr>
+                <tr>
+                    <td><strong>WABA ID</strong></td>
+                    <td>WhatsApp Business Account ID</td>
+                    <td><code>waba-01234567890123</code></td>
+                </tr>
+                <tr>
+                    <td><strong>Permanent Access Token</strong></td>
+                    <td>Permanent System User Token</td>
+                    <td><code>EAAB...</code> (starts with EAAB)</td>
+                </tr>
+                <tr>
+                    <td><strong>Account Mode</strong></td>
+                    <td>Production / Sandbox toggle</td>
+                    <td>Select <em>Production</em> for live operations</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">3</span> Test Connection</h3>
+        <p>1. Click the <strong>Test Connection</strong> button at the top of the provider form.</p>
+        <p>2. Odoo performs an instant handshake with Meta Graph API v21.0.</p>
+        <p>3. If credentials are correct, a green banner appears: <strong>"Connected / Verified"</strong> along with your verified WhatsApp Business display name and Quality Rating (Green / High).</p>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- ==================== SECTION 5 ==================== -->
+    <h2>5. Phase 4: Webhook Configuration for 2-Way Live Chat</h2>
+    <p>
+        Webhooks enable real-time two-way messaging: when a customer sends a WhatsApp text, audio voice note, or photo, Meta immediately notifies Odoo via webhook.
+    </p>
+
+    <div class="step-card">
+        <h3><span class="step-num">1</span> Copy Webhook Details from Odoo</h3>
+        <p>On your Odoo WhatsApp Provider record, locate the <strong>Webhook Configuration</strong> section:</p>
+        <ul>
+            <li><strong>Callback URL:</strong> <code>https://your-odoo-domain.com/whatsapp/webhook/[token]</code></li>
+            <li><strong>Verify Token:</strong> A secure unique random string generated by Odoo.</li>
+        </ul>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">2</span> Configure Webhook in Meta Developer Console</h3>
+        <p>1. In the Meta Developer Portal, go to <strong>WhatsApp &rarr; Configuration</strong>.</p>
+        <p>2. Locate the <strong>Webhook</strong> section and click <strong>Edit</strong>.</p>
+        <p>3. Paste the <strong>Callback URL</strong> copied from Odoo.</p>
+        <p>4. Paste the <strong>Verify Token</strong> copied from Odoo.</p>
+        <p>5. Click <strong>Verify and Save</strong>. Meta will send a verification ping to Odoo. Once validated, a green checkmark will appear.</p>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">3</span> Subscribe to Webhook Event Fields</h3>
+        <p>1. Under the Webhook section in Meta, click <strong>Manage Webhook fields</strong>.</p>
+        <p>2. Find <code>messages</code> and click <strong>Subscribe</strong>.</p>
+        <p>3. (Optional) Subscribe to <code>message_template_status_update</code> for instant template approvals.</p>
+        <p>4. Click <strong>Done</strong>.</p>
+    </div>
+
+    <div class="alert-box">
+        <strong>SSL Requirement:</strong> Meta will refuse Webhook URLs that use HTTP or self-signed SSL certificates. Your Odoo instance must have a trusted SSL certificate (e.g., Let's Encrypt, Cloudflare, or standard CA certificate).
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- ==================== SECTION 6 ==================== -->
+    <h2>6. Phase 5: Using WhatsApp Live Chat & 1-Click Quotations</h2>
+    <p>
+        With your Meta integration and Webhook configured, your team can begin managing customer conversations inside Odoo.
+    </p>
+
+    <div class="step-card">
+        <h3><span class="step-num">1</span> Launching Split-Screen Live Console</h3>
+        <p>1. In the Odoo main navigation, go to <strong>WhatsApp &rarr; Messages &rarr; Live Conversations</strong>.</p>
+        <p>2. The console opens in a full split-screen layout:</p>
+        <ul>
+            <li><strong>Left Pane (Conversation Drawer):</strong> Displays all active customer chats, customer name, avatar initials, phone number, timestamp of latest message, and green unread count pills.</li>
+            <li><strong>Center Pane (Message Thread):</strong> WhatsApp message history, incoming/outgoing bubbles, status indicators (Sent, Delivered, Read), voice note player, and input bar.</li>
+            <li><strong>Right Pane (Customer Profile):</strong> Linked Odoo Partner card, contact details, and quick action buttons.</li>
+        </ul>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">2</span> 1-Click Quotation Creation from Active Chat</h3>
+        <p>During an active conversation with a potential buyer:</p>
+        <ol>
+            <li>Click the green <strong>"CREATE QUOTATION"</strong> button on the top-right action bar.</li>
+            <li>Odoo automatically opens the Sales Quotation modal with the customer already pre-filled.</li>
+            <li>Add product order lines, quantities, and pricing.</li>
+            <li>Click <strong>"Confirm & Send WhatsApp Quotation"</strong>.</li>
+            <li>Odoo immediately generates the official Quotation PDF, confirms the order, and dispatches the quote summary with downloadable link/PDF back to the customer's WhatsApp chat thread!</li>
+        </ol>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">3</span> Inbox Filter Tabs & Real-Time Search</h3>
+        <p>Quickly organize customer chats using the top filter pills:</p>
+        <ul>
+            <li><strong>All:</strong> Shows all active customer discussions.</li>
+            <li><strong>Unread:</strong> Filters down to customers awaiting an agent response.</li>
+            <li><strong>My Messages:</strong> Shows conversations specifically assigned to the logged-in agent.</li>
+            <li><strong>Search Bar:</strong> Real-time filtering by customer name, phone number, or message text.</li>
+        </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- ==================== SECTION 7 ==================== -->
+    <h2>7. Phase 6: Voice Notes, Media & Mobile Responsive Usage</h2>
+
+    <div class="step-card">
+        <h3><span class="step-num">1</span> Recording & Sending Live Voice Notes</h3>
+        <p>Give customers a personal touch by sending authentic voice messages:</p>
+        <ol>
+            <li>In the bottom reply bar, click the <strong>Microphone icon</strong>.</li>
+            <li>Allow microphone access in your browser when prompted.</li>
+            <li>A recording timer will begin counting (e.g. <code>00:15</code>).</li>
+            <li>Click the <strong>Send button</strong> (green check) to immediately encode and send the audio note, or click the red <strong>Cancel button</strong> to discard.</li>
+            <li>The voice note appears as a native WhatsApp audio player with a play/pause button, scrubber, and waveform!</li>
+        </ol>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">2</span> Transmitting Videos, Images & Documents</h3>
+        <p>Click the <strong>Paperclip (Attach)</strong> icon to send rich media:</p>
+        <ul>
+            <li><strong>Images (JPG, PNG, WEBP):</strong> Transmitted with interactive lightbox viewer.</li>
+            <li><strong>Videos (MP4, 3GP):</strong> Plays natively inside WhatsApp on mobile.</li>
+            <li><strong>PDF Documents:</strong> Send brochures, technical specification sheets, and contracts.</li>
+        </ul>
+    </div>
+
+    <div class="step-card">
+        <h3><span class="step-num">3</span> Mobile & Tablet Responsive Operations</h3>
+        <p>
+            Oodnexa WhatsApp Live Conversation is engineered with a mobile-first philosophy:
+        </p>
+        <ul>
+            <li>On mobile smartphones (&lt; 992px), the console intelligently presents a single-pane interface.</li>
+            <li>Tap any customer to slide into the chat thread.</li>
+            <li>Tap the back arrow &larr; to return to the conversation list.</li>
+            <li>The mobile voice recorder and camera upload buttons are thumb-friendly for fast field operations.</li>
+        </ul>
+    </div>
+
+    <div class="page-break"></div>
+
+    <!-- ==================== SECTION 8 ==================== -->
+    <h2>8. Phase 7: Automations, Troubleshooting & Meta FAQ</h2>
+
+    <h3>The 24-Hour Customer Service Window (Crucial Meta Policy)</h3>
+    <p>
+        Meta enforces a <strong>24-hour customer service window</strong>:
+    </p>
+    <ul>
+        <li><strong>Within 24 Hours of Customer's Last Message:</strong> You can send any free-form text, voice note, quotation, image, or video with zero restrictions.</li>
+        <li><strong>After 24 Hours:</strong> To re-engage a customer who has been inactive for over 24 hours, you must use an <strong>Approved WhatsApp Message Template</strong> (HSM). Once the customer replies, a new 24-hour free-form session begins.</li>
+    </ul>
+
+    <h3>Troubleshooting Matrix</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Symptom</th>
+                <th>Root Cause</th>
+                <th>Resolution</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Error: (#190) Invalid OAuth Access Token</strong></td>
+                <td>Temporary token expired or invalid permissions</td>
+                <td>Generate a Permanent System User Token with <code>whatsapp_business_messaging</code> and expiration set to <em>Never</em>.</td>
+            </tr>
+            <tr>
+                <td><strong>Outgoing message status stuck on 'failed'</strong></td>
+                <td>Recipient phone number missing international country code</td>
+                <td>Ensure customer phone numbers include country code without symbols (e.g. <code>+966501234567</code> or <code>966501234567</code>).</td>
+            </tr>
+            <tr>
+                <td><strong>Incoming messages not appearing in Odoo</strong></td>
+                <td>Webhook URL not verified or 'messages' field not subscribed</td>
+                <td>Check Meta Developer Console &rarr; WhatsApp &rarr; Configuration &rarr; Webhook. Confirm green verified check and subscription to <code>messages</code>.</td>
+            </tr>
+            <tr>
+                <td><strong>Microphone voice recording not starting</strong></td>
+                <td>Browser microphone permissions blocked</td>
+                <td>Click the padlock icon next to your browser address bar &rarr; set Microphone to <em>Allow</em>.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="tip-box">
+        <strong>Need Assistance?</strong> Our certified Odoo integration team at <strong>Oodnexa Technologies</strong> is available to provide setup assistance, custom workflow rules, and enterprise support.<br>
+        Email: <a href="mailto:contact@oodnexa.com">contact@oodnexa.com</a> &nbsp;|&nbsp; Web: <a href="https://www.oodnexa.com">www.oodnexa.com</a>
+    </div>
+
+    <footer>
+        Oodnexa WhatsApp Live Conversation User Guide &copy; 2026 Oodnexa Technologies. All rights reserved.
+    </footer>
+
+</body>
+</html>

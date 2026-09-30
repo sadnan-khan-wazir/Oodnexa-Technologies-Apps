@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Module Category -->
+    <record id="module_category_whatsapp_automation" model="ir.module.category">
+        <field name="name">WhatsApp Automation</field>
+        <field name="description">WhatsApp Automation Engine access groups</field>
+        <field name="sequence">300</field>
+    </record>
+
+    <!-- Group: User -->
+    <record id="group_wa_user" model="res.groups">
+        <field name="name"> WhatsApp User</field>
+        <field name="comment">Can view messages, logs, and send via manual actions.</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+    </record>
+
+    <!-- Group: Manager -->
+    <record id="group_wa_manager" model="res.groups">
+        <field name="name">WhatsApp Manager</field>
+        <field name="comment">Can manage rules, templates, messages, campaigns, and queues.</field>
+        <field name="implied_ids" eval="[(4, ref('group_wa_user'))]"/>
+    </record>
+
+    <!-- Group: Admin -->
+    <record id="group_wa_admin" model="res.groups">
+        <field name="name">WhatsApp Administrator</field>
+        <field name="comment">Full access: providers, settings, system configuration.</field>
+        <field name="implied_ids" eval="[(4, ref('group_wa_manager'))]"/>
+    </record>
+
+    <!-- Record Rules: Multi-company -->
+    <record id="wa_provider_company_rule" model="ir.rule">
+        <field name="name">WhatsApp Provider: multi-company</field>
+        <field name="model_id" ref="model_whatsapp_automation_provider"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="wa_rule_company_rule" model="ir.rule">
+        <field name="name">WhatsApp Rule: multi-company</field>
+        <field name="model_id" ref="model_whatsapp_automation_rule"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="wa_template_company_rule" model="ir.rule">
+        <field name="name">WhatsApp Template: multi-company</field>
+        <field name="model_id" ref="model_whatsapp_automation_template"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="wa_message_company_rule" model="ir.rule">
+        <field name="name">WhatsApp Message: multi-company</field>
+        <field name="model_id" ref="model_whatsapp_automation_message"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="wa_queue_company_rule" model="ir.rule">
+        <field name="name">WhatsApp Queue: multi-company</field>
+        <field name="model_id" ref="model_whatsapp_automation_queue"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="wa_log_company_rule" model="ir.rule">
+        <field name="name">WhatsApp Log: multi-company</field>
+        <field name="model_id" ref="model_whatsapp_automation_log"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+
+    <record id="wa_campaign_company_rule" model="ir.rule">
+        <field name="name">WhatsApp Campaign: multi-company</field>
+        <field name="model_id" ref="model_whatsapp_automation_campaign"/>
+        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

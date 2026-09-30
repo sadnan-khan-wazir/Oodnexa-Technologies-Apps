@@ -1,0 +1,501 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--          WHATSAPP LIVE CONVERSATIONS VIEWS                   -->
+    <!-- ============================================================ -->
+
+    <!-- Search View with Filter Tabs (Screenshot 1) -->
+    <record id="view_wa_conversation_search" model="ir.ui.view">
+        <field name="name">whatsapp.automation.conversation.search</field>
+        <field name="model">whatsapp.automation.conversation</field>
+        <field name="arch" type="xml">
+            <search string="Search Conversations">
+                <field name="name" string="Conversation" filter_domain="['|', '|', ('partner_id.name', 'ilike', self), ('phone', 'ilike', self), ('contact_display_name', 'ilike', self)]"/>
+                <field name="partner_id"/>
+                <field name="phone"/>
+                <field name="last_message_text"/>
+                <field name="user_id"/>
+
+                <filter string="All" name="filter_all" domain="[]"/>
+                <filter string="Unread" name="filter_unread" domain="[('unread_count', '>', 0)]"/>
+                <filter string="My Messages" name="filter_my" domain="[('user_id', '=', uid)]"/>
+                <filter string="Sales Orders" name="filter_sales_orders" domain="[('has_sales_orders', '=', True)]"/>
+                <separator/>
+                <filter string="Active" name="filter_active" domain="[('state', '=', 'active')]"/>
+                <filter string="Archived" name="filter_archived" domain="[('state', '=', 'archived')]"/>
+                <separator/>
+                <filter string="Group by Customer" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                <filter string="Group by Agent" name="group_user" context="{'group_by': 'user_id'}"/>
+                <filter string="Group by State" name="group_state" context="{'group_by': 'state'}"/>
+                <filter string="Group by Provider" name="group_provider" context="{'group_by': 'provider_id'}"/>
+            </search>
+        </field>
+    </record>
+
+    <!-- List / Tree View -->
+    <record id="view_wa_conversation_tree" model="ir.ui.view">
+        <field name="name">whatsapp.automation.conversation.list</field>
+        <field name="model">whatsapp.automation.conversation</field>
+        <field name="arch" type="xml">
+            <list string="WhatsApp Live Conversations" decoration-bf="unread_count > 0" decoration-warning="unread_count > 0" create="1" edit="1">
+                <field name="contact_display_name" string="Contact"/>
+                <field name="phone"/>
+                <field name="last_message_text" string="Latest Message"/>
+                <field name="last_message_status" widget="badge"
+                       decoration-success="last_message_status == 'delivered'"
+                       decoration-info="last_message_status == 'read'"
+                       decoration-muted="last_message_status == 'sent'"
+                       decoration-danger="last_message_status == 'failed'"/>
+                <field name="last_message_at" string="Time"/>
+                <field name="unread_count" widget="badge"
+                       decoration-success="unread_count > 0"
+                       decoration-muted="unread_count == 0"
+                       string="Unread"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="provider_id" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-muted="state == 'archived'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Kanban View (Screenshot 1: WhatsApp Conversation Inbox) -->
+    <record id="view_wa_conversation_kanban" model="ir.ui.view">
+        <field name="name">whatsapp.automation.conversation.kanban</field>
+        <field name="model">whatsapp.automation.conversation</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile wa_inbox_kanban" sample="1" create="1" edit="1">
+                <field name="id"/>
+                <field name="contact_display_name"/>
+                <field name="contact_initials"/>
+                <field name="phone"/>
+                <field name="last_message_text"/>
+                <field name="last_message_at"/>
+                <field name="last_message_status"/>
+                <field name="unread_count"/>
+                <field name="partner_id"/>
+                <field name="state"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="d-flex align-items-center gap-3 p-2 wa-conversation-row" style="cursor: pointer;">
+                            <!-- Avatar with Initials + WhatsApp Green Badge (Screenshot 1) -->
+                            <div class="position-relative flex-shrink-0">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white shadow-sm"
+                                     style="width: 48px; height: 48px; background: linear-gradient(135deg, #008069 0%, #25d366 100%); font-size: 16px;">
+                                    <field name="contact_initials"/>
+                                </div>
+                                <span class="position-absolute bottom-0 end-0 bg-success rounded-circle border border-2 border-white d-flex align-items-center justify-content-center"
+                                      style="width: 17px; height: 17px; background-color: #25d366 !important;">
+                                    <i class="fa fa-whatsapp text-white" style="font-size: 10px;"/>
+                                </span>
+                            </div>
+
+                            <!-- Content Column (Screenshot 1) -->
+                            <div class="flex-grow-1 overflow-hidden" style="min-width: 0;">
+                                <!-- Top Row: Name + Unread Count Badge + Time -->
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <div class="d-flex align-items-center gap-2 text-truncate">
+                                        <strong class="fs-6 text-dark text-truncate" style="font-size: 14.5px !important;">
+                                            <field name="contact_display_name"/>
+                                        </strong>
+                                        <t t-if="record.unread_count.raw_value &gt; 0">
+                                            <span class="badge rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+                                                  style="width: 19px; height: 19px; font-size: 10px; background-color: #0d6efd !important;">
+                                                <t t-esc="record.unread_count.raw_value"/>
+                                            </span>
+                                        </t>
+                                    </div>
+                                    <span class="text-muted small flex-shrink-0 ms-2" style="font-size: 11.5px;">
+                                        <field name="last_message_at" widget="relative"/>
+                                    </span>
+                                </div>
+
+                                <!-- Middle Row: WhatsApp Phone Number + Delivery Status Pill -->
+                                <div class="d-flex align-items-center justify-content-between mb-1">
+                                    <span class="text-muted small text-truncate" style="font-size: 12.5px;">
+                                        <field name="phone"/>
+                                    </span>
+                                    <div class="flex-shrink-0 ms-2">
+                                        <t t-if="record.last_message_status.raw_value == 'read'">
+                                            <span class="badge rounded-pill" style="background-color: #e0f2fe; color: #0284c7; font-size: 10.5px; font-weight: 600; padding: 2px 8px;">
+                                                Read
+                                            </span>
+                                        </t>
+                                        <t t-elif="record.last_message_status.raw_value == 'sent'">
+                                            <span class="badge rounded-pill" style="background-color: #f1f5f9; color: #64748b; font-size: 10.5px; font-weight: 600; padding: 2px 8px;">
+                                                Sent
+                                            </span>
+                                        </t>
+                                        <t t-elif="record.last_message_status.raw_value == 'failed'">
+                                            <span class="badge rounded-pill" style="background-color: #fee2e2; color: #dc2626; font-size: 10.5px; font-weight: 600; padding: 2px 8px;">
+                                                Failed
+                                            </span>
+                                        </t>
+                                        <t t-else="">
+                                            <span class="badge rounded-pill" style="background-color: #d1fae5; color: #059669; font-size: 10.5px; font-weight: 600; padding: 2px 8px;">
+                                                Delivered
+                                            </span>
+                                        </t>
+                                    </div>
+                                </div>
+
+                                <!-- Bottom Row: Message Snippet -->
+                                <div class="text-truncate small" style="color: #64748b; font-size: 12.5px; line-height: 1.3;">
+                                    <t t-esc="record.last_message_text.value or 'No messages yet'"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Form View (Screenshot 2 Live Chat + Audit Log, Screenshot 3 Customer Info, Screenshot 4 WhatsApp Config) -->
+    <record id="view_wa_conversation_form" model="ir.ui.view">
+        <field name="name">whatsapp.automation.conversation.form</field>
+        <field name="model">whatsapp.automation.conversation</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Live Conversation" create="1" edit="1">
+                <header>
+                    <button name="action_send_reply"
+                            string="Send Reply"
+                            type="object"
+                            class="btn-success"
+                            icon="fa-paper-plane"
+                            invisible="not current_reply_text and not reply_attachment_ids"/>
+                    <button name="action_mark_read"
+                            string="Mark as Read"
+                            type="object"
+                            class="btn-secondary"
+                            icon="fa-check-circle"
+                            invisible="unread_count == 0"/>
+                    <field name="state" widget="statusbar" statusbar_visible="active,archived"/>
+                </header>
+                <sheet class="wa_full_width_sheet">
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" invisible="state != 'archived'"/>
+                    
+                    <!-- Hidden fields for programmatic access -->
+                    <field name="provider_sandbox_mode" invisible="1"/>
+
+                    <!-- TWO-COLUMN WORKSPACE: Left = Live Chat + Audit Log, Right = Customer Info + Config Card -->
+                    <div class="row g-3">
+                        <!-- ==================================================== -->
+                        <!-- LEFT COLUMN: Live Chat Stream, Composer & Audit Log  -->
+                        <!-- ==================================================== -->
+                        <div class="col-12 col-xl-8 col-lg-7">
+                            <!-- 1. Live Chat Header (Responsive Mobile + Desktop) -->
+                            <div class="d-flex flex-wrap align-items-center justify-content-between p-2 px-3 bg-white border rounded-top shadow-sm gap-2">
+                                <div class="d-flex align-items-center gap-2 flex-grow-1" style="min-width: 140px;">
+                                    <div class="position-relative flex-shrink-0">
+                                        <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold text-white shadow-sm"
+                                             style="width: 42px; height: 42px; background: linear-gradient(135deg, #008069 0%, #25d366 100%); font-size: 15px;">
+                                            <field name="contact_initials"/>
+                                        </div>
+                                        <span class="position-absolute bottom-0 end-0 bg-success rounded-circle border border-2 border-white d-flex align-items-center justify-content-center"
+                                              style="width: 15px; height: 15px; background-color: #25d366 !important;">
+                                            <i class="fa fa-whatsapp text-white" style="font-size: 8px;"/>
+                                        </span>
+                                    </div>
+                                    <div class="overflow-hidden" style="min-width: 0;">
+                                        <h5 class="my-0 fw-bold text-dark text-truncate" style="font-size: 15px;">
+                                            <field name="contact_display_name"/>
+                                        </h5>
+                                        <div class="text-muted small text-truncate" style="font-size: 12px;">
+                                            <i class="fa fa-phone me-1 text-success"/>
+                                            <field name="phone"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center gap-1 ms-auto flex-shrink-0">
+                                    <button name="action_create_sale_order" type="object"
+                                            class="btn btn-sm btn-outline-primary fw-semibold px-2 py-1"
+                                            icon="fa-shopping-cart" string="Quotation"
+                                            invisible="not partner_id"/>
+                                    <button name="action_view_sale_orders" type="object"
+                                            class="btn btn-sm btn-outline-success fw-semibold px-2 py-1"
+                                            icon="fa-cubes" string="Orders"
+                                            invisible="not partner_id"/>
+                                    <button name="action_open_partner" type="object"
+                                            class="btn btn-sm btn-outline-secondary fw-semibold px-2 py-1"
+                                            icon="fa-user" string="Contact"
+                                            invisible="not partner_id"/>
+                                </div>
+                            </div>
+
+                            <!-- 2. Interactive WhatsApp Chat Stream (Screenshot 2) -->
+                            <div class="border-start border-end">
+                                <field name="chat_history_html" nolabel="1" widget="html" readonly="1"/>
+                            </div>
+
+                            <!-- 3. WhatsApp Message Input Bar (Screenshot 2) -->
+                            <div class="p-3 bg-white border rounded-bottom shadow-sm mb-4">
+                                <!-- Formatting Toolbar & Voice Message Recorder -->
+                                <div class="d-flex align-items-center gap-1 mb-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary wa-format-btn" data-format="bold" title="Bold: *text*">
+                                        <strong>B</strong>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary wa-format-btn" data-format="italic" title="Italic: _text_">
+                                        <em>I</em>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary wa-format-btn" data-format="strike" title="Strikethrough: ~text~">
+                                        <del>S</del>
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary wa-format-btn" data-format="code" title="Monospace: `text`">
+                                        <code>&lt;/&gt;</code>
+                                    </button>
+                                    <span class="text-muted small ms-2 d-none d-md-inline" style="font-size: 11px;">
+                                        *bold*, _italic_, ~strike~, `code`
+                                    </span>
+                                    <button type="button" class="btn btn-sm btn-outline-success wa-trigger-voice-rec ms-auto fw-bold rounded-pill px-3 shadow-sm" title="Record Voice Message with Microphone">
+                                        <i class="fa fa-microphone text-danger me-1"/>Record Voice Note
+                                    </button>
+                                </div>
+
+                                <!-- Input field & Green Send Button in single row -->
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="flex-grow-1">
+                                        <field name="current_reply_text"
+                                               placeholder="Type a message..."
+                                               nolabel="1"
+                                               rows="2"/>
+                                    </div>
+                                    <button name="action_send_reply"
+                                            type="object"
+                                            class="btn btn-success rounded-circle d-flex align-items-center justify-content-center shadow"
+                                            style="width: 48px; height: 48px; background-color: #25d366; border-color: #25d366; min-width: 48px;"
+                                            title="Send WhatsApp Message">
+                                        <i class="fa fa-paper-plane text-white fs-5"/>
+                                    </button>
+                                </div>
+
+                                <!-- Attachment Uploader -->
+                                <div class="mt-2 pt-2 border-top">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <label for="reply_attachment_ids" class="form-label text-muted small fw-semibold mb-0">
+                                            <i class="fa fa-paperclip text-success me-1"/>Attach Documents / Photos / Audio:
+                                        </label>
+                                        <span class="text-muted small" style="font-size: 11px;">PDF, JPG, PNG, MP3, Audio</span>
+                                    </div>
+                                    <field name="reply_attachment_ids"
+                                           widget="many2many_binary"
+                                           nolabel="1"
+                                           placeholder="Drop files here to attach..."/>
+                                </div>
+                            </div>
+
+                            <!-- 4. Message Audit Log (Screenshot 2: "in the live chat below we will have autdit log") -->
+                            <div class="card border shadow-sm rounded-3 bg-white mb-3">
+                                <div class="card-header bg-light py-2 px-3 border-bottom d-flex align-items-center justify-content-between">
+                                    <span class="fw-bold text-dark">
+                                        <i class="fa fa-list-alt text-primary me-2"/>Message Audit Log
+                                    </span>
+                                    <span class="badge bg-secondary-subtle text-secondary small">
+                                        <field name="message_count"/> messages
+                                    </span>
+                                </div>
+                                <div class="card-body p-0">
+                                    <field name="message_ids" readonly="1">
+                                        <list string="Message Audit Log" default_order="create_date desc" limit="15">
+                                            <field name="create_date" string="Time"/>
+                                            <field name="direction" widget="badge"
+                                                   decoration-info="direction == 'incoming'"
+                                                   decoration-success="direction == 'outgoing'"/>
+                                            <field name="rendered_body" string="Message Body"/>
+                                            <field name="state" widget="badge"
+                                                   decoration-success="state in ('sent', 'delivered', 'read')"
+                                                   decoration-danger="state == 'failed'"
+                                                   decoration-info="state == 'queued'"/>
+                                            <field name="provider_message_id" string="Provider Message ID" optional="show"/>
+                                        </list>
+                                    </field>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- ==================================================== -->
+                        <!-- RIGHT COLUMN: Customer Details & WhatsApp Config     -->
+                        <!-- ==================================================== -->
+                        <div class="col-12 col-xl-4 col-lg-5">
+                            <!-- 5. Card 1: Customer & WhatsApp Line + Conversation Status (Screenshot 3) -->
+                            <div class="card border shadow-sm rounded-3 bg-white mb-3">
+                                <div class="card-body p-3">
+                                    <!-- Top Actions & Status (Screenshot 3) -->
+                                    <div class="d-flex align-items-center justify-content-between mb-3 pb-2 border-bottom">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <button name="action_create_sale_order" type="object"
+                                                    class="btn btn-sm btn-light border fw-semibold"
+                                                    icon="fa-shopping-cart" string="Create Quotation"
+                                                    invisible="not partner_id"/>
+                                            <button name="action_open_partner" type="object"
+                                                    class="btn btn-sm btn-light border fw-semibold"
+                                                    icon="fa-user" string="Open Contact"
+                                                    invisible="not partner_id"/>
+                                        </div>
+                                        <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle px-2 py-1 fw-semibold"
+                                              invisible="state != 'active'">
+                                            Active
+                                        </span>
+                                        <span class="badge rounded-pill bg-secondary-subtle text-secondary border border-secondary-subtle px-2 py-1 fw-semibold"
+                                              invisible="state != 'archived'">
+                                            Archived
+                                        </span>
+                                    </div>
+
+                                    <!-- Title (Screenshot 3) -->
+                                    <div class="mb-3">
+                                        <div class="text-muted small fw-semibold">WhatsApp Conversation</div>
+                                        <h4 class="fw-bold text-dark my-1">
+                                            <field name="name" readonly="1"/>
+                                        </h4>
+                                    </div>
+
+                                    <!-- Section: CUSTOMER & WHATSAPP LINE (Screenshot 3) -->
+                                    <div class="mb-3">
+                                        <div class="text-uppercase small fw-bold text-muted border-bottom pb-1 mb-2" style="font-size: 11px; letter-spacing: 0.5px;">
+                                            Customer &amp; WhatsApp Line
+                                        </div>
+                                        <div class="row g-2 small">
+                                            <div class="col-5 text-muted">Customer <i class="fa fa-question-circle-o text-muted"/></div>
+                                            <div class="col-7 fw-bold text-dark text-truncate">
+                                                <field name="partner_id" options="{'no_create_edit': False}"/>
+                                            </div>
+                                            <div class="col-5 text-muted">WhatsApp Number <i class="fa fa-question-circle-o text-muted"/></div>
+                                            <div class="col-7 fw-bold text-dark">
+                                                <field name="phone" widget="phone"/>
+                                            </div>
+                                            <div class="col-5 text-muted">Provider <i class="fa fa-question-circle-o text-muted"/></div>
+                                            <div class="col-7 fw-bold text-dark">
+                                                <field name="provider_id" options="{'no_create': True}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Section: CONVERSATION STATUS (Screenshot 3) -->
+                                    <div>
+                                        <div class="text-uppercase small fw-bold text-muted border-bottom pb-1 mb-2" style="font-size: 11px; letter-spacing: 0.5px;">
+                                            Conversation Status
+                                        </div>
+                                        <div class="row g-2 small">
+                                            <div class="col-5 text-muted">Assigned Agent <i class="fa fa-question-circle-o text-muted"/></div>
+                                            <div class="col-7 fw-bold text-dark">
+                                                <field name="user_id" widget="many2one_avatar_user"/>
+                                            </div>
+                                            <div class="col-5 text-muted">Last Message Time <i class="fa fa-question-circle-o text-muted"/></div>
+                                            <div class="col-7 fw-semibold text-dark">
+                                                <field name="last_message_at" readonly="1"/>
+                                            </div>
+                                            <div class="col-5 text-muted">Unread <i class="fa fa-question-circle-o text-muted"/></div>
+                                            <div class="col-7 fw-bold">
+                                                <span class="badge rounded-pill bg-success-subtle text-success px-2 py-1" invisible="unread_count == 0">
+                                                    <field name="unread_count"/> new
+                                                </span>
+                                                <span class="text-muted" invisible="unread_count > 0">0</span>
+                                            </div>
+                                            <div class="col-5 text-muted">Company <i class="fa fa-question-circle-o text-muted"/></div>
+                                            <div class="col-7 fw-semibold text-dark text-truncate">
+                                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 6. Card 2: WhatsApp Configuration (Screenshot 4) -->
+                            <div class="card border shadow-sm rounded-3 bg-white">
+                                <div class="card-body p-3">
+                                    <!-- Header with Icon & Title (Screenshot 4) -->
+                                    <div class="d-flex align-items-center gap-2 mb-3">
+                                        <i class="fa fa-whatsapp fs-4" style="color: #008069 !important;"/>
+                                        <h6 class="my-0 fw-bold" style="color: #008069 !important;">
+                                            WhatsApp Configuration
+                                        </h6>
+                                    </div>
+
+                                    <!-- Connected Status Banner (Screenshot 4) -->
+                                    <div class="p-2 px-3 rounded bg-success-subtle border border-success-subtle mb-3 d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center gap-2">
+                                            <i class="fa fa-check-circle text-success fs-5"/>
+                                            <div>
+                                                <span class="fw-bold text-success d-block small">Connected</span>
+                                                <span class="text-muted" style="font-size: 11px;">Your WhatsApp Business account is active.</span>
+                                            </div>
+                                        </div>
+                                        <button name="action_test_provider_connection" type="object"
+                                                class="btn btn-sm btn-outline-success fw-bold py-0 px-2"
+                                                style="font-size: 11px;" title="Test WhatsApp Connection">
+                                            Active
+                                        </button>
+                                    </div>
+
+                                    <!-- Configuration Details (Screenshot 4) -->
+                                    <div class="row g-2 small mb-3">
+                                        <div class="col-5 text-muted">Business Name</div>
+                                        <div class="col-7 fw-bold text-dark text-truncate">
+                                            <field name="provider_verified_name" readonly="1"/>
+                                        </div>
+                                        <div class="col-5 text-muted">Phone Number</div>
+                                        <div class="col-7 fw-bold text-dark">
+                                            <field name="provider_display_phone" readonly="1"/>
+                                        </div>
+                                        <div class="col-5 text-muted">Phone Number ID</div>
+                                        <div class="col-7 fw-semibold text-muted text-truncate" style="font-family: monospace;">
+                                            <field name="provider_phone_number_id" readonly="1"/>
+                                        </div>
+                                        <div class="col-5 text-muted">Account Mode</div>
+                                        <div class="col-7 fw-bold">
+                                            <span class="badge bg-primary-subtle text-primary border border-primary-subtle" invisible="provider_sandbox_mode">
+                                                Production
+                                            </span>
+                                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle" invisible="not provider_sandbox_mode">
+                                                Sandbox / Test
+                                            </span>
+                                        </div>
+                                        <div class="col-5 text-muted">Quality Rating</div>
+                                        <div class="col-7 fw-bold text-success">
+                                            <field name="provider_quality_rating" readonly="1"/>
+                                        </div>
+                                    </div>
+
+                                    <!-- View Details Button (Screenshot 4) -->
+                                    <button name="action_view_provider" type="object"
+                                            class="btn btn-light border w-100 fw-bold py-2 text-dark shadow-sm"
+                                            style="border-radius: 6px;">
+                                        <i class="fa fa-check me-2 text-primary"/>View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Client Action: Split-Screen Live Console (Screenshot 2) -->
+    <record id="action_wa_live_console" model="ir.actions.client">
+        <field name="name">WhatsApp Live Chat</field>
+        <field name="tag">Oodnexa_whatspp_live_conversation.live_console</field>
+        <field name="target">main</field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_wa_conversation_list" model="ir.actions.act_window">
+        <field name="name">Live Conversations</field>
+        <field name="res_model">whatsapp.automation.conversation</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="search_view_id" ref="view_wa_conversation_search"/>
+        <field name="context">{'search_default_filter_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No WhatsApp conversations yet!
+            </p>
+            <p>
+                When customers reply or message your WhatsApp Business number, their live conversations will appear here automatically. You can also start a conversation directly from any Customer, Quotation, or Sales Order.
+            </p>
+        </field>
+    </record>
+
+</odoo>

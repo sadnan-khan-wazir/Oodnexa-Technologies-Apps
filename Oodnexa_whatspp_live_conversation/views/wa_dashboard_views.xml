@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--                  DASHBOARD VIEW                              -->
+    <!-- ============================================================ -->
+
+    <!-- Dashboard Action (server action to display) -->
+    <record id="action_wa_dashboard" model="ir.actions.act_window">
+        <field name="name">WhatsApp Dashboard</field>
+        <field name="res_model">whatsapp.automation.message</field>
+        <field name="view_mode">graph,pivot,list</field>
+     
+    </record>
+
+    <!-- Dashboard Graph (daily by state) -->
+    <record id="view_wa_dashboard_graph" model="ir.ui.view">
+        <field name="name">whatsapp.automation.message.dashboard.graph</field>
+        <field name="model">whatsapp.automation.message</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <graph string="WhatsApp Messages Dashboard" type="bar" stacked="1">
+                <field name="create_date" interval="day"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Dashboard Pivot -->
+    <record id="view_wa_dashboard_pivot" model="ir.ui.view">
+        <field name="name">whatsapp.automation.message.dashboard.pivot</field>
+        <field name="model">whatsapp.automation.message</field>
+        <field name="priority">20</field>
+        <field name="arch" type="xml">
+            <pivot string="WhatsApp Messages Analysis">
+                <field name="create_date" interval="week" type="row"/>
+                <field name="state" type="col"/>
+                <field name="message_type" type="row"/>
+            </pivot>
+        </field>
+    </record>
+</odoo>

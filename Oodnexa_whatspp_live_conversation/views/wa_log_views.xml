@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--                  LOG VIEWS                                   -->
+    <!-- ============================================================ -->
+
+    <!-- List View -->
+    <record id="view_wa_log_list" model="ir.ui.view">
+        <field name="name">whatsapp.automation.log.list</field>
+        <field name="model">whatsapp.automation.log</field>
+        <field name="arch" type="xml">
+            <list create="0" edit="0" decoration-danger="event_type in ('failed', 'error')">
+                <field name="create_date" string="Timestamp"/>
+                <field name="event_type" widget="badge"
+                       decoration-success="event_type in ('sent', 'delivered', 'read')"
+                       decoration-danger="event_type in ('failed', 'error')"
+                       decoration-warning="event_type == 'retried'"
+                       decoration-info="event_type in ('created', 'queued', 'processing')"/>
+                <field name="message_id"/>
+                <field name="partner_id" optional="show"/>
+                <field name="phone" optional="show"/>
+                <field name="rule_id" optional="show"/>
+                <field name="template_id" optional="hide"/>
+                <field name="provider_id" optional="hide"/>
+                <field name="details"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_wa_log_form" model="ir.ui.view">
+        <field name="name">whatsapp.automation.log.form</field>
+        <field name="model">whatsapp.automation.log</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="create_date"/>
+                            <field name="event_type"/>
+                            <field name="message_id"/>
+                        </group>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="phone"/>
+                            <field name="rule_id"/>
+                            <field name="template_id"/>
+                            <field name="provider_id"/>
+                        </group>
+                    </group>
+                    <group string="Details">
+                        <field name="details" nolabel="1" colspan="2"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Action -->
+    <record id="action_wa_log_list" model="ir.actions.act_window">
+        <field name="name">Automation Logs</field>
+        <field name="res_model">whatsapp.automation.log</field>
+        <field name="view_mode">list,form</field>
+       
+    </record>
+</odoo>

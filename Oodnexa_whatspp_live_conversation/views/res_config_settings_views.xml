@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--              RES.CONFIG.SETTINGS VIEWS                       -->
+    <!-- ============================================================ -->
+
+    <record id="view_wa_res_config_settings" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.whatsapp.automation</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app string="WhatsApp Automation" name="Oodnexa_whatspp_live_conversation"
+                     groups="Oodnexa_whatspp_live_conversation.group_wa_admin">
+
+                    <block title="General">
+                        <setting string="Enable WhatsApp Automation"
+                                 help="Master switch to enable or disable the automation engine.">
+                            <field name="wa_automation_enabled"/>
+                        </setting>
+                        <setting string="Default Provider"
+                                 help="Default WhatsApp provider used when no provider is specified on a rule.">
+                            <field name="wa_default_provider_id"/>
+                        </setting>
+                    </block>
+
+                    <block title="Queue &amp; Retry">
+                        <setting string="Queue Batch Size"
+                                 help="Number of messages to process per cron run.">
+                            <field name="wa_queue_batch_size"/>
+                        </setting>
+                        <setting string="Default Retry Attempts"
+                                 help="Number of times to retry failed messages.">
+                            <field name="wa_default_retry_attempts"/>
+                        </setting>
+                        <setting string="Retry Delay (minutes)"
+                                 help="Base delay between retry attempts.">
+                            <field name="wa_retry_delay_minutes"/>
+                        </setting>
+                    </block>
+
+                    <block title="Feature Toggles">
+                        <setting string="Enable Reminders"
+                                 help="Enable scheduled reminder rules.">
+                            <field name="wa_enable_reminders"/>
+                        </setting>
+                        <setting string="Enable CRM Automation"
+                                 help="Enable CRM lead/opportunity automation rules.">
+                            <field name="wa_enable_crm_automation"/>
+                        </setting>
+                        <setting string="Enable Sales/Order Updates"
+                                 help="Enable sales order and delivery update rules.">
+                            <field name="wa_enable_sales_updates"/>
+                        </setting>
+                        <setting string="Enable Invoice Reminders"
+                                 help="Enable invoice payment reminder rules.">
+                            <field name="wa_enable_invoice_reminders"/>
+                        </setting>
+                    </block>
+
+                    <block title="Compliance &amp; Safety">
+                        <setting string="Require Approved Templates"
+                                 help="Only allow sending via approved templates.">
+                            <field name="wa_require_approved_templates"/>
+                        </setting>
+                        <setting string="Duplicate Prevention Window (hours)"
+                                 help="Minimum hours between duplicate messages per rule/record.">
+                            <field name="wa_duplicate_prevention_window"/>
+                        </setting>
+                        <setting string="Log Retention (days)"
+                                 help="Days to retain automation logs. Older logs are purged.">
+                            <field name="wa_log_retention_days"/>
+                        </setting>
+                    </block>
+
+                    <block title="Business Hours (Placeholder)">
+                        <setting string="Send Window Start (hour)"
+                                 help="Earliest hour to send messages (24h format).">
+                            <field name="wa_send_window_start"/>
+                        </setting>
+                        <setting string="Send Window End (hour)"
+                                 help="Latest hour to send messages (24h format).">
+                            <field name="wa_send_window_end"/>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Settings Action -->
+    <record id="action_wa_settings" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">current</field>
+        <field name="context">{'module': 'Oodnexa_whatspp_live_conversation'}</field>
+    </record>
+</odoo>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_wa_send_wizard_form" model="ir.ui.view">
+        <field name="name">whatsapp.automation.send.wizard.form</field>
+        <field name="model">whatsapp.automation.send.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Send via WhatsApp (API)">
+                <field name="has_pdf_report" invisible="1"/>
+                <field name="res_model" invisible="1"/>
+                <field name="res_id" invisible="1"/>
+
+                <group>
+                    <group string="Recipient Information">
+                        <field name="document_name"/>
+                        <field name="partner_id"/>
+                        <field name="phone" placeholder="+971501234567"/>
+                    </group>
+                    <group string="WhatsApp Provider &amp; Template">
+                        <field name="provider_id" options="{'no_create': True}"/>
+                        <field name="template_id" options="{'no_create': True}"/>
+                        <field name="attach_pdf" invisible="not has_pdf_report"/>
+                        <field name="pdf_filename" invisible="not attach_pdf"/>
+                    </group>
+                </group>
+
+                <group string="Online Portal Access" invisible="not portal_url">
+                    <field name="portal_url" widget="CopyClipboardChar" readonly="1"/>
+                </group>
+
+                <notebook>
+                    <page string="Message Preview">
+                        <group>
+                            <field name="preview_header" readonly="1" invisible="not preview_header"/>
+                            <field name="preview_body" readonly="1" widget="text"
+                                   style="font-family: monospace; background-color: #f8f9fa; border: 1px solid #dee2e6; border-radius: 4px; padding: 10px;"/>
+                            <field name="preview_footer" readonly="1" invisible="not preview_footer"/>
+                        </group>
+                    </page>
+                </notebook>
+
+                <footer>
+                    <button name="action_send_whatsapp"
+                            type="object"
+                            string="Send WhatsApp"
+                            class="btn-primary"
+                            icon="fa-whatsapp"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_wa_send_wizard" model="ir.actions.act_window">
+        <field name="name">Send via WhatsApp (API)</field>
+        <field name="res_model">whatsapp.automation.send.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

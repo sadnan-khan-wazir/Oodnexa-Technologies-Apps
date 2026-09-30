@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--                  TEMPLATE VIEWS                              -->
+    <!-- ============================================================ -->
+
+    <!-- List View -->
+    <record id="view_wa_template_list" model="ir.ui.view">
+        <field name="name">whatsapp.automation.template.list</field>
+        <field name="model">whatsapp.automation.template</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="template_type"/>
+                <field name="template_category"/>
+                <field name="language_code"/>
+                <field name="approval_status" widget="badge"
+                       decoration-success="approval_status == 'approved'"
+                       decoration-warning="approval_status == 'pending'"
+                       decoration-danger="approval_status == 'rejected'"
+                       decoration-info="approval_status == 'draft'"/>
+                <field name="category_id" optional="show"/>
+                <field name="message_count" string="Sent"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_wa_template_form" model="ir.ui.view">
+        <field name="name">whatsapp.automation.template.form</field>
+        <field name="model">whatsapp.automation.template</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_approve" type="object" string="Approve"
+                            class="btn-primary"
+                            invisible="approval_status != 'pending'"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <button name="action_reject" type="object" string="Reject"
+                            class="btn-secondary"
+                            invisible="approval_status != 'pending'"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <field name="approval_status" widget="statusbar"
+                           statusbar_visible="draft,pending,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_messages" type="object"
+                                class="oe_stat_button" icon="fa-envelope">
+                            <field name="message_count" widget="statinfo" string="Messages"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Template Name"/></h1>
+                    </div>
+                    <group>
+                        <group string="General">
+                            <field name="template_type"/>
+                            <field name="template_category"/>
+                            <field name="category_id"/>
+                            <field name="language_code"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Provider Info">
+                            <field name="provider_template_id"
+                                   placeholder="e.g. hello_world"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content">
+                            <group>
+                                <group string="Header">
+                                    <field name="header_type"/>
+                                    <field name="header_text"
+                                           invisible="header_type != 'text'"
+                                           placeholder="Header text with {{variables}}"/>
+                                </group>
+                            </group>
+                            <separator string="Body"/>
+                            <field name="body_text" placeholder="Hello {{customer_name}}, your order {{order_number}} is confirmed!"/>
+                            <separator string="Footer"/>
+                            <field name="footer_text" placeholder="Optional footer text"/>
+                        </page>
+                        <page string="Variables">
+                            <group>
+                                <field name="variable_list" readonly="1"/>
+                            </group>
+                            <separator string="Variable Schema (JSON)"/>
+                            <field name="variable_schema_json"
+                                   placeholder='[{"name": "customer_name", "field": "partner_id.name", "default": "Customer"}]'/>
+                        </page>
+                        <page string="Buttons">
+                            <field name="button_config_json"
+                                   placeholder='[{"type": "QUICK_REPLY", "text": "Yes"}, {"type": "URL", "text": "View Order", "url": "https://..."}]'/>
+                        </page>
+                        <page string="Preview">
+                            <group>
+                                <field name="preview_body" readonly="1"
+                                       widget="text"/>
+                            </group>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_wa_template_kanban" model="ir.ui.view">
+        <field name="name">whatsapp.automation.template.kanban</field>
+        <field name="model">whatsapp.automation.template</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="template_type"/>
+                <field name="approval_status"/>
+                <field name="message_count"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold fs-5"/>
+                        <div class="d-flex justify-content-between mt-2">
+                            <field name="template_type" widget="badge"/>
+                            <field name="approval_status" widget="badge"
+                                   decoration-success="approval_status == 'approved'"
+                                   decoration-warning="approval_status == 'pending'"
+                                   decoration-danger="approval_status == 'rejected'"/>
+                        </div>
+                        <div class="mt-2 text-muted">
+                            <span><field name="message_count"/> messages sent</span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    
+    <!-- Action -->
+    <record id="action_wa_template_list" model="ir.actions.act_window">
+        <field name="name">Templates</field>
+        <field name="res_model">whatsapp.automation.template</field>
+        <field name="view_mode">list,kanban,form</field>
+       
+    </record>
+</odoo>

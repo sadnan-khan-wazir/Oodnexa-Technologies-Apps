@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--                  AUTOMATION RULE VIEWS                       -->
+    <!-- ============================================================ -->
+
+    <!-- List View -->
+    <record id="view_wa_rule_list" model="ir.ui.view">
+        <field name="name">whatsapp.automation.rule.list</field>
+        <field name="model">whatsapp.automation.rule</field>
+        <field name="arch" type="xml">
+            <list decoration-muted="state == 'archived'" decoration-info="state == 'draft'">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="code" optional="show"/>
+                <field name="trigger_type"/>
+                <field name="target_model_id"/>
+                <field name="template_id"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'active'"
+                       decoration-warning="state == 'paused'"
+                       decoration-info="state == 'draft'"
+                       decoration-muted="state == 'archived'"/>
+                <field name="execution_count" string="Runs"/>
+                <field name="success_count" string="OK"/>
+                <field name="failure_count" string="Fail"/>
+                <field name="last_run_at" optional="show"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_wa_rule_form" model="ir.ui.view">
+        <field name="name">whatsapp.automation.rule.form</field>
+        <field name="model">whatsapp.automation.rule</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate" type="object" string="Activate"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <button name="action_pause" type="object" string="Pause"
+                            invisible="state != 'active'"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <button name="action_activate" type="object" string="Resume"
+                            class="btn-primary"
+                            invisible="state != 'paused'"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <button name="action_reset_draft" type="object" string="Reset to Draft"
+                            invisible="state not in ('paused', 'archived')"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <button name="action_test_rule" type="object" string="Test Rule"
+                            class="btn-secondary"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_messages" type="object"
+                                class="oe_stat_button" icon="fa-envelope">
+                            <field name="message_count" widget="statinfo" string="Messages"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Paused" bg_color="text-bg-warning"
+                            invisible="state != 'paused'"/>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Rule Name"/></h1>
+                    </div>
+                    <group>
+                        <group string="General">
+                            <field name="code" placeholder="e.g. CRM_WELCOME"/>
+                            <field name="category_id"/>
+                            <field name="campaign_id"/>
+                            <field name="priority"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                        </group>
+                        <group string="Company">
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Trigger">
+                            <group>
+                                <group string="Target">
+                                    <field name="target_model_id"/>
+                                    <field name="target_model_name" invisible="1"/>
+                                    <field name="trigger_type"/>
+                                    <field name="event_type"
+                                           invisible="trigger_type not in ('on_state_change', 'on_write')"/>
+                                    <field name="watched_field_ids" widget="many2many_tags"
+                                           invisible="trigger_type not in ('on_write', 'on_state_change')"/>
+                                </group>
+                                <group string="Recipient">
+                                    <field name="recipient_mode"/>
+                                    <field name="phone_field_name"
+                                           invisible="recipient_mode != 'record_field'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Conditions">
+                            <group>
+                                <field name="domain_filter" widget="domain"
+                                       options="{'model': target_model_id.model}"
+                                       placeholder="[]"/>
+                            </group>
+                            <group string="Extra Conditions">
+                                <field name="condition_json"
+                                       placeholder='{"min_amount": 100}'/>
+                            </group>
+                        </page>
+                        <page string="Schedule / Delay">
+                            <group>
+                                <group>
+                                    <field name="delay_mode"/>
+                                    <field name="delay_value"
+                                           invisible="delay_mode not in ('delay', 'date_field')"/>
+                                    <field name="delay_unit"
+                                           invisible="delay_mode not in ('delay', 'date_field')"/>
+                                </group>
+                                <group>
+                                    <field name="schedule_datetime"
+                                           invisible="delay_mode != 'fixed_time'"/>
+                                    <field name="date_field_id"
+                                           invisible="delay_mode != 'date_field'"/>
+                                    <field name="date_field_direction"
+                                           invisible="delay_mode != 'date_field'"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Template &amp; Provider">
+                            <group>
+                                <group>
+                                    <field name="template_id"/>
+                                </group>
+                                <group>
+                                    <field name="provider_id"
+                                           placeholder="Leave empty for default"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Control">
+                            <group>
+                                <group>
+                                    <field name="allow_resend"/>
+                                    <field name="max_send_count"
+                                           invisible="not allow_resend"/>
+                                    <field name="stop_on_reply"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Statistics">
+                            <group>
+                                <group>
+                                    <field name="execution_count"/>
+                                    <field name="success_count"/>
+                                    <field name="failure_count"/>
+                                </group>
+                                <group>
+                                    <field name="last_run_at"/>
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Description &amp; Notes">
+                            <field name="description" placeholder="Rule description..."/>
+                            <separator string="Notes"/>
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_wa_rule_kanban" model="ir.ui.view">
+        <field name="name">whatsapp.automation.rule.kanban</field>
+        <field name="model">whatsapp.automation.rule</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="trigger_type"/>
+                <field name="execution_count"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold"/>
+                        <div class="mt-1">
+                            <field name="trigger_type" widget="badge"/>
+                        </div>
+                        <div class="mt-1 text-muted">
+                            <span><field name="execution_count"/> executions</span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+  
+
+    <!-- Action -->
+    <record id="action_wa_rule_list" model="ir.actions.act_window">
+        <field name="name">Automation Rules</field>
+        <field name="res_model">whatsapp.automation.rule</field>
+        <field name="view_mode">list,kanban,form</field>
+       
+    </record>
+</odoo>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- ============================================================ -->
+        <!--                  DEMO: PROVIDERS                             -->
+        <!-- ============================================================ -->
+        <record id="demo_provider_generic" model="whatsapp.automation.provider">
+            <field name="name">Demo Generic Provider</field>
+            <field name="provider_type">generic</field>
+            <field name="api_base_url">https://api.example.com/v1</field>
+            <field name="sandbox_mode">True</field>
+            <field name="default_provider">True</field>
+            <field name="status">active</field>
+            <field name="notes">&lt;p&gt;This is a sandbox/test provider for demo purposes.&lt;/p&gt;</field>
+        </record>
+
+        <record id="demo_provider_meta" model="whatsapp.automation.provider">
+            <field name="name">Demo Meta Cloud API</field>
+            <field name="provider_type">meta_cloud</field>
+            <field name="api_base_url">https://graph.facebook.com/v21.0</field>
+            <field name="phone_number_id">1234567890</field>
+            <field name="sandbox_mode">True</field>
+            <field name="default_provider">False</field>
+            <field name="status">configured</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!--                  DEMO: TEMPLATES                             -->
+        <!-- ============================================================ -->
+        <record id="demo_template_welcome" model="whatsapp.automation.template">
+            <field name="name">Welcome Message</field>
+            <field name="template_type">text</field>
+            <field name="template_category">utility</field>
+            <field name="category_id" ref="category_crm"/>
+            <field name="language_code">en</field>
+            <field name="body_text">Hello {{customer_name}}! Welcome to {{company_name}}. We're excited to have you. How can we help you today?</field>
+            <field name="footer_text">Sent via WhatsApp Automation</field>
+            <field name="approval_status">approved</field>
+        </record>
+
+        <record id="demo_template_order_confirm" model="whatsapp.automation.template">
+            <field name="name">Order Confirmation</field>
+            <field name="template_type">text</field>
+            <field name="template_category">utility</field>
+            <field name="category_id" ref="category_sales"/>
+            <field name="language_code">en</field>
+            <field name="header_type">text</field>
+            <field name="header_text">Order Confirmed! 🎉</field>
+            <field name="body_text">Hi {{customer_name}}, your order {{order_number}} has been confirmed! Total: {{order_total}}. We'll keep you updated on the delivery status.</field>
+            <field name="footer_text">Thank you for your purchase!</field>
+            <field name="approval_status">approved</field>
+        </record>
+
+        <record id="demo_template_payment_reminder" model="whatsapp.automation.template">
+            <field name="name">Payment Reminder</field>
+            <field name="template_type">text</field>
+            <field name="template_category">utility</field>
+            <field name="category_id" ref="category_invoice"/>
+            <field name="language_code">en</field>
+            <field name="body_text">Hi {{customer_name}}, this is a friendly reminder that your invoice {{order_number}} with amount {{order_total}} is due on {{due_date}}. Please ensure timely payment to avoid any inconvenience.</field>
+            <field name="approval_status">approved</field>
+        </record>
+
+        <record id="demo_template_delivery_update" model="whatsapp.automation.template">
+            <field name="name">Delivery Update</field>
+            <field name="template_type">text</field>
+            <field name="template_category">utility</field>
+            <field name="category_id" ref="category_delivery"/>
+            <field name="language_code">en</field>
+            <field name="body_text">Hi {{customer_name}}, your order {{order_number}} is now {{stage_name}}. Track your delivery: {{tracking_link}}</field>
+            <field name="approval_status">approved</field>
+        </record>
+
+        <record id="demo_template_followup" model="whatsapp.automation.template">
+            <field name="name">CRM Follow-up</field>
+            <field name="template_type">text</field>
+            <field name="template_category">marketing</field>
+            <field name="category_id" ref="category_crm"/>
+            <field name="language_code">en</field>
+            <field name="body_text">Hi {{customer_name}}, we noticed you were interested in our services. Our team at {{company_name}} would love to help. Would you like to schedule a call with {{salesperson_name}}?</field>
+            <field name="approval_status">approved</field>
+        </record>
+
+        <record id="demo_template_reengagement" model="whatsapp.automation.template">
+            <field name="name">Re-engagement Message</field>
+            <field name="template_type">text</field>
+            <field name="template_category">marketing</field>
+            <field name="category_id" ref="category_campaign"/>
+            <field name="language_code">en</field>
+            <field name="body_text">Hi {{customer_name}}, we miss you at {{company_name}}! It's been a while since we last connected. Check out our latest offerings — we think you'll love them.</field>
+            <field name="approval_status">approved</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!--                  DEMO: RULES                                 -->
+        <!-- ============================================================ -->
+        <record id="demo_rule_crm_welcome" model="whatsapp.automation.rule">
+            <field name="name">New Lead Welcome</field>
+            <field name="code">CRM_WELCOME</field>
+            <field name="category_id" ref="category_crm"/>
+            <field name="target_model_id" ref="crm.model_crm_lead"/>
+            <field name="trigger_type">on_create</field>
+            <field name="delay_mode">immediate</field>
+            <field name="template_id" ref="demo_template_welcome"/>
+            <field name="recipient_mode">partner_mobile</field>
+            <field name="state">draft</field>
+            <field name="domain_filter">[('type', '=', 'lead')]</field>
+            <field name="description">Send a welcome WhatsApp message when a new CRM lead is created.</field>
+        </record>
+
+        <record id="demo_rule_order_confirm" model="whatsapp.automation.rule">
+            <field name="name">Order Confirmed Update</field>
+            <field name="code">ORDER_CONFIRM</field>
+            <field name="category_id" ref="category_sales"/>
+            <field name="target_model_id" ref="sale.model_sale_order"/>
+            <field name="trigger_type">on_state_change</field>
+            <field name="event_type">state</field>
+            <field name="delay_mode">immediate</field>
+            <field name="template_id" ref="demo_template_order_confirm"/>
+            <field name="recipient_mode">partner_mobile</field>
+            <field name="state">draft</field>
+            <field name="domain_filter">[('state', '=', 'sale')]</field>
+            <field name="description">Send order confirmation when a sales order is confirmed.</field>
+        </record>
+
+        <record id="demo_rule_invoice_reminder" model="whatsapp.automation.rule">
+            <field name="name">Invoice Payment Reminder</field>
+            <field name="code">INV_REMINDER</field>
+            <field name="category_id" ref="category_invoice"/>
+            <field name="target_model_id" ref="account.model_account_move"/>
+            <field name="trigger_type">date_reminder</field>
+            <field name="delay_mode">date_field</field>
+            <field name="delay_value">3</field>
+            <field name="delay_unit">days</field>
+            <field name="date_field_direction">before</field>
+            <field name="template_id" ref="demo_template_payment_reminder"/>
+            <field name="recipient_mode">partner_mobile</field>
+            <field name="state">draft</field>
+            <field name="domain_filter">[('move_type', '=', 'out_invoice'), ('payment_state', '!=', 'paid')]</field>
+            <field name="description">Send payment reminder 3 days before invoice due date.</field>
+        </record>
+
+        <record id="demo_rule_crm_followup" model="whatsapp.automation.rule">
+            <field name="name">CRM Follow-up After 2 Days</field>
+            <field name="code">CRM_FOLLOWUP</field>
+            <field name="category_id" ref="category_crm"/>
+            <field name="target_model_id" ref="crm.model_crm_lead"/>
+            <field name="trigger_type">follow_up</field>
+            <field name="delay_mode">delay</field>
+            <field name="delay_value">2</field>
+            <field name="delay_unit">days</field>
+            <field name="template_id" ref="demo_template_followup"/>
+            <field name="recipient_mode">partner_mobile</field>
+            <field name="state">draft</field>
+            <field name="domain_filter">[('type', '=', 'opportunity')]</field>
+            <field name="description">Send a follow-up message 2 days after CRM opportunity creation.</field>
+        </record>
+
+        <!-- ============================================================ -->
+        <!--                  DEMO: CAMPAIGN                              -->
+        <!-- ============================================================ -->
+        <record id="demo_campaign_onboarding" model="whatsapp.automation.campaign">
+            <field name="name">Customer Onboarding Campaign</field>
+            <field name="state">draft</field>
+            <field name="category_id" ref="category_campaign"/>
+            <field name="description">Automated onboarding messages for new customers.</field>
+        </record>
+    </data>
+</odoo>

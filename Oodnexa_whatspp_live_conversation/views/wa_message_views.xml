@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--                  MESSAGE VIEWS                               -->
+    <!-- ============================================================ -->
+
+    <!-- List View -->
+    <record id="view_wa_message_list" model="ir.ui.view">
+        <field name="name">whatsapp.automation.message.list</field>
+        <field name="model">whatsapp.automation.message</field>
+        <field name="arch" type="xml">
+            <list decoration-danger="state == 'failed'" decoration-muted="state == 'cancelled'"
+                  decoration-success="state in ('sent', 'delivered', 'read')">
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="phone"/>
+                <field name="message_type"/>
+                <field name="state" widget="badge"
+                       decoration-success="state in ('sent', 'delivered', 'read')"
+                       decoration-danger="state == 'failed'"
+                       decoration-warning="state == 'queued'"
+                       decoration-info="state == 'processing'"
+                       decoration-muted="state == 'cancelled'"/>
+                <field name="rule_id" optional="show"/>
+                <field name="template_id" optional="show"/>
+                <field name="direction"/>
+                <field name="sent_at" optional="show"/>
+                <field name="delivered_at" optional="hide"/>
+                <field name="retry_count" optional="hide"/>
+                <field name="provider_id" optional="hide"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                <field name="create_date"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_wa_message_form" model="ir.ui.view">
+        <field name="name">whatsapp.automation.message.form</field>
+        <field name="model">whatsapp.automation.message</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_retry" type="object" string="Retry"
+                            class="btn-primary"
+                            invisible="state != 'failed'"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <button name="action_cancel" type="object" string="Cancel"
+                            invisible="state not in ('draft', 'queued')"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,queued,processing,sent,delivered,read"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group string="Recipient">
+                            <field name="partner_id"/>
+                            <field name="phone"/>
+                            <field name="direction"/>
+                            <field name="message_type"/>
+                        </group>
+                        <group string="Source">
+                            <field name="rule_id"/>
+                            <field name="template_id"/>
+                            <field name="campaign_id"/>
+                            <field name="provider_id"/>
+                            <field name="related_model"/>
+                            <field name="related_res_id"/>
+                            <button name="action_open_related_record" type="object"
+                                    string="Open Source Record" class="btn-link"
+                                    icon="fa-external-link"
+                                    invisible="not related_model"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Content">
+                            <field name="rendered_body" readonly="1"/>
+                        </page>
+                        <page string="Delivery Info">
+                            <group>
+                                <group>
+                                    <field name="provider_message_id"/>
+                                    <field name="retry_count"/>
+                                    <field name="max_retries"/>
+                                </group>
+                                <group>
+                                    <field name="queued_at"/>
+                                    <field name="sent_at"/>
+                                    <field name="delivered_at"/>
+                                    <field name="read_at"/>
+                                    <field name="failed_at"/>
+                                </group>
+                            </group>
+                            <group string="Error" invisible="not error_message">
+                                <field name="error_message" readonly="1" colspan="2"/>
+                            </group>
+                        </page>
+                        <page string="Payload">
+                            <field name="payload_json" readonly="1"/>
+                        </page>
+                        <page string="Notes">
+                            <field name="note"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+   
+
+    <!-- Graph View -->
+    <record id="view_wa_message_graph" model="ir.ui.view">
+        <field name="name">whatsapp.automation.message.graph</field>
+        <field name="model">whatsapp.automation.message</field>
+        <field name="arch" type="xml">
+            <graph string="Message Analytics" type="bar">
+                <field name="create_date" interval="day"/>
+                <field name="state"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Pivot View -->
+    <record id="view_wa_message_pivot" model="ir.ui.view">
+        <field name="name">whatsapp.automation.message.pivot</field>
+        <field name="model">whatsapp.automation.message</field>
+        <field name="arch" type="xml">
+            <pivot string="Message Analysis">
+                <field name="create_date" interval="month" type="row"/>
+                <field name="state" type="col"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_wa_message_list" model="ir.actions.act_window">
+        <field name="name">Messages</field>
+        <field name="res_model">whatsapp.automation.message</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+       
+    </record>
+</odoo>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--                  CAMPAIGN VIEWS                              -->
+    <!-- ============================================================ -->
+
+    <!-- List View -->
+    <record id="view_wa_campaign_list" model="ir.ui.view">
+        <field name="name">whatsapp.automation.campaign.list</field>
+        <field name="model">whatsapp.automation.campaign</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="state" widget="badge"
+                       decoration-success="state == 'running'"
+                       decoration-warning="state == 'paused'"
+                       decoration-info="state == 'draft'"
+                       decoration-muted="state in ('completed', 'archived')"/>
+                <field name="category_id" optional="show"/>
+                <field name="rule_count" string="Rules"/>
+                <field name="message_count" string="Msgs"/>
+                <field name="success_count" string="OK"/>
+                <field name="failure_count" string="Fail"/>
+                <field name="start_date" optional="show"/>
+                <field name="end_date" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_wa_campaign_form" model="ir.ui.view">
+        <field name="name">whatsapp.automation.campaign.form</field>
+        <field name="model">whatsapp.automation.campaign</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start" type="object" string="Start"
+                            class="btn-primary"
+                            invisible="state != 'draft'"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <button name="action_pause" type="object" string="Pause"
+                            invisible="state != 'running'"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <button name="action_start" type="object" string="Resume"
+                            class="btn-primary"
+                            invisible="state != 'paused'"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <button name="action_complete" type="object" string="Complete"
+                            invisible="state not in ('running', 'paused')"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_manager"/>
+                    <field name="state" widget="statusbar"
+                           statusbar_visible="draft,running,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_rules" type="object"
+                                class="oe_stat_button" icon="fa-cogs">
+                            <field name="rule_count" widget="statinfo" string="Rules"/>
+                        </button>
+                        <button name="action_view_messages" type="object"
+                                class="oe_stat_button" icon="fa-envelope">
+                            <field name="message_count" widget="statinfo" string="Messages"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1><field name="name" placeholder="Campaign Name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="category_id"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                        <group>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="active"/>
+                            <field name="success_count"/>
+                            <field name="failure_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Rules">
+                            <field name="rule_ids">
+                                <list>
+                                    <field name="name"/>
+                                    <field name="trigger_type"/>
+                                    <field name="state" widget="badge"/>
+                                    <field name="execution_count"/>
+                                </list>
+                            </field>
+                        </page>
+                        <page string="Description">
+                            <field name="description" placeholder="Campaign description..."/>
+                        </page>
+                        <page string="Notes">
+                            <field name="notes"/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Kanban View -->
+    <record id="view_wa_campaign_kanban" model="ir.ui.view">
+        <field name="name">whatsapp.automation.campaign.kanban</field>
+        <field name="model">whatsapp.automation.campaign</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="name"/>
+                <field name="state"/>
+                <field name="rule_count"/>
+                <field name="message_count"/>
+                <field name="color"/>
+                <templates>
+                    <t t-name="card">
+                        <field name="name" class="fw-bold fs-5"/>
+                        <div class="d-flex justify-content-between mt-2">
+                            <span><field name="rule_count"/> rules</span>
+                            <span><field name="message_count"/> messages</span>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+  
+    <!-- Action -->
+    <record id="action_wa_campaign_list" model="ir.actions.act_window">
+        <field name="name">Campaigns</field>
+        <field name="res_model">whatsapp.automation.campaign</field>
+        <field name="view_mode">kanban,list,form</field>
+    
+    </record>
+</odoo>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--              BULK SEND WIZARD VIEWS                          -->
+    <!-- ============================================================ -->
+
+    <record id="view_wa_bulk_send_wizard_form" model="ir.ui.view">
+        <field name="name">whatsapp.automation.bulk.send.wizard.form</field>
+        <field name="model">whatsapp.automation.bulk.send.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Bulk WhatsApp Send">
+                <group>
+                    <group>
+                        <field name="template_id"/>
+                        <field name="provider_id" placeholder="Default provider"/>
+                        <field name="phone_field"/>
+                    </group>
+                    <group>
+                        <field name="recipient_count"/>
+                    </group>
+                </group>
+                <separator string="Recipients"/>
+                <field name="partner_ids" widget="many2many_tags"
+                       options="{'no_create': True}"
+                       domain="[('wa_opt_in', '=', True), ('wa_blacklisted', '=', False)]"/>
+                <separator string="Preview"/>
+                <field name="preview_body" readonly="1"/>
+                <footer>
+                    <button name="action_send" type="object" string="Send" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action to open wizard -->
+    <record id="action_wa_bulk_send_wizard" model="ir.actions.act_window">
+        <field name="name">Send WhatsApp Messages</field>
+        <field name="res_model">whatsapp.automation.bulk.send.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

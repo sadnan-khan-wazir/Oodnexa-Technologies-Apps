@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>whatsapp Live conversation - Odoo 19 by Oodnexa Technologies</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600&display=swap"
+          rel="stylesheet">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        :root {
+            --wa-green: #25D366;
+            --wa-teal: #00A884;
+            --wa-dark-teal: #075E54;
+            --wa-dark: #111B21;
+            --wa-dark-card: #202C33;
+            --wa-bg-light: #F0F2F5;
+            --wa-border: #E9EDEF;
+            --oodnexa-primary: #008069;
+            --oodnexa-accent: #25D366;
+            --text-dark: #1E293B;
+            --text-muted: #64748B;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: var(--text-dark);
+            background-color: #FFFFFF;
+            line-height: 1.6;
+        }
+
+        /* Hero Banner */
+        .ood-hero {
+            background: linear-gradient(135deg, #075E54 0%, #008069 45%, #111B21 100%);
+            color: #FFFFFF;
+            border-radius: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ood-hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(37, 211, 102, 0.25) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .badge-pill-glow {
+            background: rgba(37, 211, 102, 0.18);
+            border: 1px solid rgba(37, 211, 102, 0.5);
+            color: #25D366;
+            padding: 8px 18px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px rgba(37, 211, 102, 0.2);
+        }
+
+        .badge-pill-light {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #FFFFFF;
+            padding: 6px 14px;
+            border-radius: 50px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        /* Stat Counter Card */
+        .stat-card {
+            background: #FFFFFF;
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--wa-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 18px 40px rgba(0, 168, 132, 0.12);
+        }
+
+        /* Feature Cards */
+        .feature-box {
+            background: #FFFFFF;
+            border-radius: 24px;
+            border: 1px solid #E2E8F0;
+            padding: 32px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .feature-box:hover {
+            border-color: var(--wa-teal);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px rgba(0, 168, 132, 0.1);
+        }
+
+        .feature-icon-wrapper {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(37, 211, 102, 0.15) 0%, rgba(0, 168, 132, 0.25) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--oodnexa-primary);
+            font-size: 1.6rem;
+            margin-bottom: 20px;
+        }
+
+        /* Showcase Banner Containers */
+        .showcase-container {
+            background: #F8FAFC;
+            border-radius: 24px;
+            padding: 35px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 35px;
+        }
+
+        .img-actual-screenshot {
+            border-radius: 16px;
+            box-shadow: 0 16px 40px rgba(17, 27, 33, 0.12);
+            border: 2px solid #E2E8F0;
+            width: 100%;
+            height: auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .img-actual-screenshot:hover {
+            transform: scale(1.01);
+            box-shadow: 0 20px 50px rgba(0, 168, 132, 0.18);
+        }
+
+        /* Check list */
+        .check-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .check-list li {
+            position: relative;
+            padding-left: 32px;
+            margin-bottom: 12px;
+            font-size: 0.98rem;
+            font-weight: 500;
+            color: #334155;
+        }
+
+        .check-list li i {
+            position: absolute;
+            left: 0;
+            top: 4px;
+            color: var(--wa-green);
+            font-size: 1.15rem;
+        }
+
+        /* Table */
+        .comparison-table th {
+            background: #111B21;
+            color: #FFFFFF;
+            padding: 16px 20px;
+            font-weight: 700;
+        }
+
+        .comparison-table td {
+            padding: 16px 20px;
+            vertical-align: middle;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .table-check {
+            color: var(--wa-green);
+            font-size: 1.25rem;
+        }
+
+        .table-cross {
+            color: #EF4444;
+            font-size: 1.25rem;
+        }
+
+        /* Section Titles */
+        .section-tag {
+            color: var(--oodnexa-primary);
+            font-weight: 800;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .section-title {
+            font-weight: 800;
+            font-size: 2.2rem;
+            color: #0F172A;
+            line-height: 1.25;
+            margin-bottom: 16px;
+        }
+
+        /* CTA buttons */
+        .btn-ood-primary {
+            background: linear-gradient(135deg, #00A884 0%, #25D366 100%);
+            color: #FFFFFF;
+            font-weight: 700;
+            border-radius: 12px;
+            padding: 14px 28px;
+            border: none;
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.35);
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-ood-primary:hover {
+            color: #FFFFFF;
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(37, 211, 102, 0.45);
+        }
+
+        .btn-ood-outline {
+            background: transparent;
+            color: #FFFFFF;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            font-weight: 600;
+            border-radius: 12px;
+            padding: 13px 26px;
+            transition: all 0.25s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ood-outline:hover {
+            color: #FFFFFF;
+            border-color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .screenshot-caption {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 10px;
+            padding: 10px 16px;
+            margin-top: 12px;
+            font-size: 0.88rem;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container py-4">
+
+    <!-- ======================================================== -->
+    <!--                     HEADER & HERO                        -->
+    <!-- ======================================================== -->
+    <section class="ood-hero p-4 p-md-5 mb-5 shadow-lg">
+        <div class="row align-items-center">
+            <div class="col-lg-8 mb-4 mb-lg-0">
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge-pill-glow">
+                            <i class="fa-brands fa-whatsapp"></i> Official Meta Cloud API
+                        </span>
+                    <span class="badge-pill-light">Odoo 19 Ready</span>
+                    <span class="badge-pill-light">Community & Enterprise</span>
+                    <span class="badge-pill-light">Technical: <code>Oodnexa_whatspp_live_conversation</code></span>
+                </div>
+
+                <h1 class="display-4 fw-extrabold mb-3" style="font-weight: 800; letter-spacing: -0.5px;">
+                    whatsapp Live conversation
+                </h1>
+
+                <p class="lead mb-4" style="color: #E2E8F0; font-size: 1.15rem; max-width: 650px;">
+                    The ultimate real-time WhatsApp live chat and sales automation suite for Odoo 19. Features native
+                    split-screen conversations, live voice recording, rich media & video streaming, 1-click Quotation
+                    creation directly from chat, and official Meta Cloud API connectivity with zero recurring gateway
+                    subscriptions.
+                </p>
+
+                <div class="d-flex flex-wrap gap-3">
+                    <a href="#live-chat" class="btn-ood-primary">
+                        <i class="fa fa-comments"></i> Explore Live Chat
+                    </a>
+                    <a href="#meta-setup" class="btn-ood-outline">
+                        <i class="fa fa-sliders"></i> Meta Cloud API Setup
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 text-center">
+                <div class="position-relative d-inline-block p-2">
+                    <img src="icon.png" alt="whatsapp Live conversation icon" class="img-fluid rounded-4 shadow-lg"
+                         style="max-width: 220px; border: 4px solid rgba(255, 255, 255, 0.25);">
+                    <div class="mt-3">
+                            <span class="badge bg-dark bg-opacity-75 text-white px-3 py-2 rounded-pill border border-secondary">
+                                <i class="fa fa-award text-success me-1"></i> Developed by <strong>Oodnexa Technologies</strong>
+                            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Banner Showcase in Hero -->
+        <div class="row mt-5 pt-3 border-top border-light border-opacity-10">
+            <div class="col-12">
+                <img src="banner.png" alt="whatsapp Live conversation banner"
+                     class="img-fluid rounded-4 shadow-lg w-100" style="border: 2px solid rgba(255,255,255,0.15);">
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--                   KEY STATS & HIGHLIGHTS                 -->
+    <!-- ======================================================== -->
+    <section class="mb-5">
+        <div class="row g-3">
+            <div class="col-6 col-md-3">
+                <div class="stat-card text-center">
+                    <div class="fs-1 fw-bold text-success mb-1">98%</div>
+                    <div class="fw-semibold text-dark mb-0">Customer Open Rate</div>
+                    <small class="text-muted">Direct to customer mobile WhatsApp</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card text-center">
+                    <div class="fs-1 fw-bold text-success mb-1">&lt; 2s</div>
+                    <div class="fw-semibold text-dark mb-0">Live Webhook Sync</div>
+                    <small class="text-muted">Instant two-way incoming message delivery</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card text-center">
+                    <div class="fs-1 fw-bold text-success mb-1">1-Click</div>
+                    <div class="fw-semibold text-dark mb-0">Direct Quotation</div>
+                    <small class="text-muted">Create & send quotations from active chat</small>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="stat-card text-center">
+                    <div class="fs-1 fw-bold text-success mb-1">250K+</div>
+                    <div class="fw-semibold text-dark mb-0">Daily Meta Message Tier</div>
+                    <small class="text-muted">Official Cloud API with high throughput</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--   ACTUAL SCREENSHOT 1: SPLIT SCREEN LIVE CHAT & VOICE    -->
+    <!-- ======================================================== -->
+    <section id="live-chat" class="showcase-container">
+        <div class="row align-items-center mb-4">
+            <div class="col-lg-8">
+                <span class="section-tag"><i class="fa fa-microphone me-1"></i> Actual Live Screenshot</span>
+                <h2 class="section-title mb-2">Split-Screen Live Chat with Native Voice Notes</h2>
+                <p class="text-muted mb-0">
+                    Real screenshot from our live Odoo 19 deployment: Agents can view conversation threads, listen to
+                    incoming voice notes, record live audio replies, and view customer details simultaneously.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-bold">
+                        <i class="fa fa-check-circle me-1"></i> Live Production UI
+                    </span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <img src="actual_live_chat_voice.png" alt="Odoo WhatsApp Live Chat with Voice Messages"
+                     class="img-actual-screenshot">
+                <div class="screenshot-caption">
+                    <i class="fa fa-info-circle text-primary"></i>
+                    <span><strong>Actual Screenshot:</strong> Displays split-screen live console, interactive audio notes with waveforms (6s, 5s, 10s), quick action buttons (<em>Edit, Quotation, Orders, Contact, Details</em>), and real-time WhatsApp Connected status.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-md-4">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="fa fa-check-circle text-success mt-1"></i>
+                    <div>
+                        <strong>Live Voice Recorder:</strong> Record browser audio via MediaRecorder and send official
+                        voice note format.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="fa fa-check-circle text-success mt-1"></i>
+                    <div>
+                        <strong>Filter Tabs (All / Unread / My):</strong> Instant segmenting by unread messages or
+                        assigned support agents.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="fa fa-check-circle text-success mt-1"></i>
+                    <div>
+                        <strong>Live Message Audit Log:</strong> Transparent record tracking with sent, delivered, and
+                        read timestamps.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--    ACTUAL SCREENSHOT 2: RICH MEDIA, PHOTOS & VIDEOS     -->
+    <!-- ======================================================== -->
+    <section class="showcase-container">
+        <div class="row align-items-center mb-4">
+            <div class="col-lg-8">
+                <span class="section-tag"><i class="fa fa-film me-1"></i> Actual Live Screenshot</span>
+                <h2 class="section-title mb-2">Rich Media, Photo Previews & MP4 Video Streaming</h2>
+                <p class="text-muted mb-0">
+                    Exchange high-resolution photos, PDF quotation files, and MP4 product video walkthroughs that
+                    customers can stream directly inside WhatsApp.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 fw-bold">
+                        <i class="fa fa-play-circle me-1"></i> Native Video Player
+                    </span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <img src="actual_live_chat_media.png" alt="Odoo WhatsApp Live Media and Video Player"
+                     class="img-actual-screenshot">
+                <div class="screenshot-caption">
+                    <i class="fa fa-info-circle text-primary"></i>
+                    <span><strong>Actual Screenshot:</strong> High-resolution image preview lightbox and embedded MP4 video player (<code>file_example_MP4_480_1_5MG.mp4</code>) operating inside the live WhatsApp thread.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-md-4">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="fa fa-check-circle text-success mt-1"></i>
+                    <div>
+                        <strong>Interactive Image Preview:</strong> Click image thumbnails to preview in full resolution
+                        or download offline.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="fa fa-check-circle text-success mt-1"></i>
+                    <div>
+                        <strong>Video Player Integration:</strong> Stream MP4 clips directly inside the conversation
+                        thread.
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="fa fa-check-circle text-success mt-1"></i>
+                    <div>
+                        <strong>Document Storage:</strong> All media attachments automatically archive into Odoo
+                        attachments for future audit.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--  ACTUAL SCREENSHOT 3: PROVIDER & META CLOUD API SETUP   -->
+    <!-- ======================================================== -->
+    <section id="meta-setup" class="showcase-container" style="background: #F0FDF4; border-color: #DCFCE7;">
+        <div class="row align-items-center mb-4">
+            <div class="col-lg-8">
+                <span class="section-tag" style="color: #15803D;"><i class="fa fa-cloud me-1"></i> Actual Live Screenshot</span>
+                <h2 class="section-title mb-2">Meta Cloud API Provider & Live Webhook Configuration</h2>
+                <p class="text-muted mb-0">
+                    See how easy it is to link your WhatsApp Business account. Connect directly to Meta Cloud API with
+                    high throughput (250K msgs/day) and live Webhook callback.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <span class="badge bg-success text-white px-3 py-2 fw-bold">
+                        <i class="fa fa-signal me-1"></i> Connected & Active
+                    </span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <img src="actual_provider_config.png" alt="Meta WhatsApp Provider Configuration in Odoo"
+                     class="img-actual-screenshot">
+                <div class="screenshot-caption">
+                    <i class="fa fa-info-circle text-success"></i>
+                    <span><strong>Actual Screenshot:</strong> Active WhatsApp Provider (<em>Customer Care</em>) showing Tier: <strong>250K msgs/day</strong>, Quality: <strong>High (Green)</strong>, Latency: 1,879 ms, Phone ID, WABA ID, and Webhook Callback URL.</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mt-3">
+            <div class="col-md-3">
+                <div class="p-3 bg-white rounded-3 border">
+                    <strong class="d-block text-dark">Meta Cloud API</strong>
+                    <small class="text-muted">Direct connection to Graph API v21.0</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 bg-white rounded-3 border">
+                    <strong class="d-block text-dark">High Throughput</strong>
+                    <small class="text-muted">Tier 250K messages per day capacity</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 bg-white rounded-3 border">
+                    <strong class="d-block text-dark">High Quality Rating</strong>
+                    <small class="text-muted">Real-time green quality tier tracking</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="p-3 bg-white rounded-3 border">
+                    <strong class="d-block text-dark">Instant Webhook</strong>
+                    <small class="text-muted">Secure verified token handshake</small>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--  ACTUAL SCREENSHOT 4: QUOTATION NOTIFICATION TEMPLATE   -->
+    <!-- ======================================================== -->
+    <section class="showcase-container">
+        <div class="row align-items-center mb-4">
+            <div class="col-lg-8">
+                <span class="section-tag"><i class="fa fa-file-invoice me-1"></i> Actual Live Screenshot</span>
+                <h2 class="section-title mb-2">Automated Quotation Notification Templates</h2>
+                <p class="text-muted mb-0">
+                    Create approved WhatsApp templates with safe dynamic variables like <code>{{customer_name}}</code>,
+                    <code>{{order_number}}</code>, and <code>{{order_total}}</code>.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-bold">
+                        <i class="fa fa-check-double me-1"></i> Approved Template Status
+                    </span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <img src="actual_template_config.png" alt="WhatsApp Quotation Notification Template"
+                     class="img-actual-screenshot">
+                <div class="screenshot-caption">
+                    <i class="fa fa-info-circle text-primary"></i>
+                    <span><strong>Actual Screenshot:</strong> Approved <em>Quotation Notification</em> template configured for Sales & Orders with Jinja variable rendering: <code>Hello {{customer_name}}, your quotation {{order_number}} for {{order_total}} is ready from {{company_name}}...</code></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--    ACTUAL SCREENSHOT 5: ALL CONVERSATIONS KANBAN VIEW   -->
+    <!-- ======================================================== -->
+    <section class="showcase-container">
+        <div class="row align-items-center mb-4">
+            <div class="col-lg-8">
+                <span class="section-tag"><i class="fa fa-table-cells me-1"></i> Actual Live Screenshot</span>
+                <h2 class="section-title mb-2">Live Conversations Kanban Board & Overview</h2>
+                <p class="text-muted mb-0">
+                    Supervise all incoming customer discussions in a bird's-eye Kanban view with customer avatars,
+                    delivery status, and unread counters.
+                </p>
+            </div>
+            <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <span class="badge bg-info-subtle text-info-emphasis border border-info-subtle px-3 py-2 fw-bold">
+                        <i class="fa fa-users me-1"></i> Team Collaboration
+                    </span>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-12">
+                <img src="actual_conversations_kanban.png" alt="All WhatsApp Conversations Kanban View"
+                     class="img-actual-screenshot">
+                <div class="screenshot-caption">
+                    <i class="fa fa-info-circle text-primary"></i>
+                    <span><strong>Actual Screenshot:</strong> Real conversations kanban cards with initials (WA, AN, II, AK, 05, SADNAN), status badges (<em>Delivered, Read, Sent</em>), and timestamps.</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--        1-CLICK QUOTATIONS & MOBILE RESPONSIVE UI         -->
+    <!-- ======================================================== -->
+    <section class="mb-5">
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper">
+                        <i class="fa fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 class="fw-bold fs-4 mb-3">1-Click Quotation Creation in Chat</h3>
+                    <p class="text-muted mb-4">
+                        Close deals 3x faster! When talking with a buyer on WhatsApp, simply click
+                        <strong>"Quotation"</strong>. Odoo pre-populates the partner and items, generates the official
+                        sales order, and sends the quotation summary & PDF back to WhatsApp.
+                    </p>
+                    <img src="screenshot_create_quote.png" alt="1-Click Quotation Creation in WhatsApp"
+                         class="img-fluid rounded-3 border mb-3 shadow-sm">
+                    <ul class="check-list mb-0">
+                        <li><i class="fa fa-circle-check"></i> Customer & pricelist linked automatically.</li>
+                        <li><i class="fa fa-circle-check"></i> One-click "Confirm & Send WhatsApp Quotation".</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="feature-box">
+                    <div class="feature-icon-wrapper">
+                        <i class="fa fa-mobile-screen-button"></i>
+                    </div>
+                    <h3 class="fw-bold fs-4 mb-3">100% Mobile & Tablet Responsive</h3>
+                    <p class="text-muted mb-4">
+                        Empower your on-the-go sales reps! The WhatsApp console automatically shifts into single-pane
+                        drawer navigation on smartphones and tablets with touch-friendly voice recording and mobile
+                        uploads.
+                    </p>
+                    <img src="screenshot_mobile_view.png" alt="Mobile Responsive WhatsApp Chat"
+                         class="img-fluid rounded-3 border mb-3 shadow-sm">
+                    <ul class="check-list mb-0">
+                        <li><i class="fa fa-circle-check"></i> Smooth single-pane mobile chat drawer.</li>
+                        <li><i class="fa fa-circle-check"></i> Thumb-friendly audio recording & camera upload.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--                   COMPARISON TABLE                       -->
+    <!-- ======================================================== -->
+    <section class="mb-5">
+        <div class="text-center mb-4">
+            <span class="section-tag">Feature Benchmark</span>
+            <h2 class="section-title">How whatsapp Live conversation Compares</h2>
+        </div>
+
+        <div class="table-responsive shadow-sm rounded-4 border overflow-hidden">
+            <table class="table comparison-table mb-0">
+                <thead>
+                <tr>
+                    <th style="width: 40%;">Feature Capability</th>
+                    <th class="text-center" style="width: 25%; background: #008069;">whatsapp Live conversation</th>
+                    <th class="text-center" style="width: 20%;">Standard Odoo App</th>
+                    <th class="text-center" style="width: 15%;">Third-Party Gateway</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><strong>Interactive Split-Screen Live Console</strong></td>
+                    <td class="text-center table-check"><i class="fa fa-circle-check"></i></td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i></td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i></td>
+                </tr>
+                <tr>
+                    <td><strong>1-Click Create Quotation Directly from Chat</strong></td>
+                    <td class="text-center table-check"><i class="fa fa-circle-check"></i></td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i></td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i></td>
+                </tr>
+                <tr>
+                    <td><strong>HTML5 Live Voice Note Recording & Playback</strong></td>
+                    <td class="text-center table-check"><i class="fa fa-circle-check"></i></td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i></td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i></td>
+                </tr>
+                <tr>
+                    <td><strong>Videos, Images & PDF Media Transmission</strong></td>
+                    <td class="text-center table-check"><i class="fa fa-circle-check"></i></td>
+                    <td class="text-center text-muted">Limited</td>
+                    <td class="text-center table-check"><i class="fa fa-circle-check"></i></td>
+                </tr>
+                <tr>
+                    <td><strong>100% Mobile & Tablet Responsive</strong></td>
+                    <td class="text-center table-check"><i class="fa fa-circle-check"></i></td>
+                    <td class="text-center text-muted">Partial</td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i></td>
+                </tr>
+                <tr>
+                    <td><strong>Official Meta Cloud API (Zero Middleman Fees)</strong></td>
+                    <td class="text-center table-check"><i class="fa fa-circle-check"></i></td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i></td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i> (Monthly Fees)</td>
+                </tr>
+                <tr>
+                    <td><strong>Tier 250K Messages/Day & High Quality Score</strong></td>
+                    <td class="text-center table-check"><i class="fa fa-circle-check"></i></td>
+                    <td class="text-center table-cross"><i class="fa fa-circle-xmark"></i></td>
+                    <td class="text-center text-muted">Extra Cost</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--           STEP-BY-STEP USER GUIDE & PDF SECTION          -->
+    <!-- ======================================================== -->
+    <section id="guide" class="showcase-container"
+             style="background: linear-gradient(135deg, #F8FAFC 0%, #EFF6FF 100%);">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <span class="section-tag" style="color: #2563EB;"><i class="fa fa-book-open me-1"></i> Documentation Included</span>
+                <h2 class="section-title">Complete Configuration PDF User Manual Included</h2>
+                <p class="text-muted mb-4">
+                    Everything is documented step-by-step: From creating your Meta Business Account and generating
+                    Permanent System User tokens to inside Odoo provider verification!
+                </p>
+
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 shadow-sm border">
+                            <span class="badge bg-primary rounded-circle p-2 fs-6">1</span>
+                            <div>
+                                <strong class="d-block text-dark">Meta Developer Portal</strong>
+                                <small class="text-muted">Business app creation & WABA setup</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 shadow-sm border">
+                            <span class="badge bg-primary rounded-circle p-2 fs-6">2</span>
+                            <div>
+                                <strong class="d-block text-dark">Permanent Token</strong>
+                                <small class="text-muted">Never-expiring System User key</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 shadow-sm border">
+                            <span class="badge bg-primary rounded-circle p-2 fs-6">3</span>
+                            <div>
+                                <strong class="d-block text-dark">Webhook Configuration</strong>
+                                <small class="text-muted">Callback URL & message subscriptions</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="d-flex align-items-center gap-3 p-3 bg-white rounded-3 shadow-sm border">
+                            <span class="badge bg-primary rounded-circle p-2 fs-6">4</span>
+                            <div>
+                                <strong class="d-block text-dark">Inside Odoo Operations</strong>
+                                <small class="text-muted">Live chat, quotes & voice notes</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4 text-center mt-4 mt-lg-0">
+                <div class="p-4 bg-white rounded-4 shadow-sm border text-center">
+                    <i class="fa fa-file-pdf text-danger" style="font-size: 4rem;"></i>
+                    <h5 class="fw-bold mt-3 mb-1">Official Setup Guide</h5>
+                    <p class="text-muted small mb-3">Saved in module root & documentation folder</p>
+                    <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 fw-bold">
+                            <i class="fa fa-check me-1"></i> Complete PDF Included
+                        </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!--                      AUTHOR & FOOTER                     -->
+    <!-- ======================================================== -->
+    <footer class="p-4 p-md-5 rounded-4 text-white shadow-lg" style="background: #111B21;">
+        <div class="row align-items-center">
+            <div class="col-md-7 mb-4 mb-md-0">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <img src="icon.png" alt="Oodnexa Logo" style="width: 50px; height: 50px; border-radius: 12px;">
+                    <div>
+                        <h4 class="fw-bold mb-0 text-white">Oodnexa Technologies</h4>
+                        <small class="text-muted " style="color:rgba(173, 183, 198, 0.76) !important">Pioneering
+                            Enterprise AI & Communication Solutions</small>
+                    </div>
+                </div>
+                <p class="text-muted mb-0" style="font-size: 0.95rem; color:rgba(173, 183, 198, 0.76) !important">
+                    Need custom integrations, dedicated deployment, or enterprise support? Our certified Odoo engineers
+                    are ready to assist you.
+                </p>
+            </div>
+
+            <div class="col-md-5 text-md-end">
+                <div class="d-inline-flex flex-column gap-2 text-md-end">
+                    <div class="text-white fw-bold">
+                        <i class="fa fa-envelope text-success me-2"></i> sadnanhussain2@gmail.com
+                    </div>
+                    <div class="text-white fw-bold">
+                        <i class="fa fa-globe text-success me-2"></i> +923059722846
+                    </div>
+                    <div class="mt-2">
+                            <span class="badge bg-success px-3 py-2 rounded-pill">
+                                <i class="fa fa-life-ring me-1"></i> 60 Days Free Technical Support
+                            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-4 pt-3 border-top border-secondary border-opacity-25 text-muted small"
+             style="color:rgba(173, 183, 198, 0.76) !important">
+            &copy; 2026 Oodnexa Technologies. All rights reserved. Compatible with Odoo 19.0 Community & Enterprise
+            Editions.
+        </div>
+    </footer>
+
+</div>
+
+</body>
+</html>

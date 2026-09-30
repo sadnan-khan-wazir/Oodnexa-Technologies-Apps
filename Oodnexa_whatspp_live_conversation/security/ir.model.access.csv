@@ -1,0 +1,26 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_wa_category_user,whatsapp.automation.category user,model_whatsapp_automation_category,group_wa_user,1,0,0,0
+access_wa_category_manager,whatsapp.automation.category manager,model_whatsapp_automation_category,group_wa_manager,1,1,1,1
+access_wa_provider_user,whatsapp.automation.provider user,model_whatsapp_automation_provider,group_wa_user,1,0,0,0
+access_wa_provider_admin,whatsapp.automation.provider admin,model_whatsapp_automation_provider,group_wa_admin,1,1,1,1
+access_wa_template_user,whatsapp.automation.template user,model_whatsapp_automation_template,group_wa_user,1,0,0,0
+access_wa_template_manager,whatsapp.automation.template manager,model_whatsapp_automation_template,group_wa_manager,1,1,1,1
+access_wa_rule_user,whatsapp.automation.rule user,model_whatsapp_automation_rule,group_wa_user,1,0,0,0
+access_wa_rule_manager,whatsapp.automation.rule manager,model_whatsapp_automation_rule,group_wa_manager,1,1,1,1
+access_wa_message_user,whatsapp.automation.message user,model_whatsapp_automation_message,group_wa_user,1,0,0,0
+access_wa_message_manager,whatsapp.automation.message manager,model_whatsapp_automation_message,group_wa_manager,1,1,1,1
+access_wa_queue_user,whatsapp.automation.queue user,model_whatsapp_automation_queue,group_wa_user,1,0,0,0
+access_wa_queue_manager,whatsapp.automation.queue manager,model_whatsapp_automation_queue,group_wa_manager,1,1,1,1
+access_wa_log_user,whatsapp.automation.log user,model_whatsapp_automation_log,group_wa_user,1,0,0,0
+access_wa_log_manager,whatsapp.automation.log manager,model_whatsapp_automation_log,group_wa_manager,1,1,1,0
+access_wa_campaign_user,whatsapp.automation.campaign user,model_whatsapp_automation_campaign,group_wa_user,1,0,0,0
+access_wa_campaign_manager,whatsapp.automation.campaign manager,model_whatsapp_automation_campaign,group_wa_manager,1,1,1,1
+access_wa_contact_pref_user,whatsapp.automation.contact.preference user,model_whatsapp_automation_contact_preference,group_wa_user,1,0,0,0
+access_wa_contact_pref_manager,whatsapp.automation.contact.preference manager,model_whatsapp_automation_contact_preference,group_wa_manager,1,1,1,1
+access_wa_sale_send_wizard_user,whatsapp.automation.sale.send.wizard user,model_whatsapp_automation_sale_send_wizard,group_wa_user,1,1,1,1
+access_wa_sale_send_wizard_manager,whatsapp.automation.sale.send.wizard manager,model_whatsapp_automation_sale_send_wizard,group_wa_manager,1,1,1,1
+access_wa_send_wizard_user,whatsapp.automation.send.wizard user,model_whatsapp_automation_send_wizard,group_wa_user,1,1,1,1
+access_wa_send_wizard_manager,whatsapp.automation.send.wizard manager,model_whatsapp_automation_send_wizard,group_wa_manager,1,1,1,1
+access_wa_conv_user,whatsapp.automation.conversation user,model_whatsapp_automation_conversation,group_wa_user,1,1,1,1
+access_wa_conv_manager,whatsapp.automation.conversation manager,model_whatsapp_automation_conversation,group_wa_manager,1,1,1,1
+

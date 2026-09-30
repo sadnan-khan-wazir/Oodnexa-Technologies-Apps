@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--                  PROVIDER VIEWS                              -->
+    <!-- ============================================================ -->
+
+    <!-- List View -->
+    <record id="view_wa_provider_list" model="ir.ui.view">
+        <field name="name">whatsapp.automation.provider.list</field>
+        <field name="model">whatsapp.automation.provider</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="sequence" widget="handle"/>
+                <field name="name" string="Provider Name"/>
+                <field name="provider_type"/>
+                <field name="display_phone_number" string="WhatsApp Number"/>
+                <field name="quality_rating" widget="badge"
+                       decoration-success="quality_rating == 'GREEN'"
+                       decoration-warning="quality_rating == 'YELLOW'"
+                       decoration-danger="quality_rating == 'RED'"/>
+                <field name="messaging_tier" string="Daily Tier" optional="show"/>
+                <field name="latency_ms" string="Latency" optional="show"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'active'"
+                       decoration-warning="status == 'configured'"
+                       decoration-danger="status == 'error'"
+                       decoration-info="status == 'draft'"
+                       decoration-muted="status == 'disabled'"/>
+                <field name="sandbox_mode" widget="boolean_toggle"/>
+                <field name="default_provider" widget="boolean_toggle"/>
+                <field name="company_id" optional="hide" groups="base.group_multi_company"/>
+                <field name="message_count" string="Messages"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_wa_provider_form" model="ir.ui.view">
+        <field name="name">whatsapp.automation.provider.form</field>
+        <field name="model">whatsapp.automation.provider</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_test_connection" type="object"
+                            string="Test Connection" class="btn-primary"
+                            icon="fa-plug"
+                            groups="Oodnexa_whatspp_live_conversation.group_wa_admin"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="draft,configured,active"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_messages" type="object"
+                                class="oe_stat_button" icon="fa-envelope">
+                            <field name="message_count" widget="statinfo" string="Messages"/>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Sandbox" bg_color="text-bg-warning"
+                            invisible="not sandbox_mode"/>
+
+                    <div class="oe_title">
+                        <label for="name" string="Provider Name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Meta Cloud API (Production)"/>
+                        </h1>
+                    </div>
+
+                    <!-- Clean, single-line Status Ribbon for Active Connection -->
+                    <div class="alert alert-success d-flex align-items-center justify-content-between p-2 px-3 my-3 rounded"
+                         invisible="status != 'active'" role="status">
+                        <div class="d-flex align-items-center gap-3">
+                            <i class="fa fa-check-circle fs-4 text-success"/>
+                            <div>
+                                <span class="fw-bold text-success">Connected &amp; Active</span>
+                                <span class="text-muted mx-2">|</span>
+                                <span class="text-muted small">Number: </span><strong class="small"><field name="display_phone_number" readonly="1"/></strong>
+                                <span class="text-muted mx-2">|</span>
+                                <span class="text-muted small">Quality: </span><strong class="small"><field name="quality_rating" readonly="1"/></strong>
+                                <span class="text-muted mx-2">|</span>
+                                <span class="text-muted small">Tier: </span><strong class="small"><field name="messaging_tier" readonly="1"/></strong>
+                                <span class="text-muted mx-2">|</span>
+                                <span class="text-muted small">Latency: </span><strong class="small"><field name="latency_ms" readonly="1"/> ms</strong>
+                            </div>
+                        </div>
+                        <div class="text-muted small d-none d-lg-block">
+                            Verified: <field name="last_diagnostic_date" readonly="1"/>
+                        </div>
+                    </div>
+
+                    <!-- Error Alert -->
+                    <div class="alert alert-danger d-flex align-items-center gap-2 p-2 px-3 my-3 rounded"
+                         invisible="status != 'error'" role="alert">
+                        <i class="fa fa-exclamation-triangle fs-4 text-danger"/>
+                        <div>
+                            <strong class="text-danger">Connection Failed:</strong>
+                            <span class="small ms-1">Please verify your Phone Number ID and Access Token below, then click <strong>Test Connection</strong>.</span>
+                        </div>
+                    </div>
+
+                    <!-- General Settings Group -->
+                    <group>
+                        <group string="Configuration">
+                            <field name="provider_type"/>
+                            <field name="default_provider"/>
+                            <field name="sandbox_mode"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_open': True}"/>
+                        </group>
+                        <group string="WhatsApp Details" invisible="status not in ('active', 'configured')">
+                            <field name="display_phone_number" readonly="1" string="Phone Number"/>
+                            <field name="verified_name" readonly="1" invisible="not verified_name"/>
+                            <field name="messaging_tier" readonly="1"/>
+                            <field name="quality_rating" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <!-- Organized Notebook -->
+                    <notebook>
+                        <page string="API &amp; Webhook Credentials" name="credentials">
+                            <group>
+                                <group string="API Credentials">
+                                    <field name="phone_number_id" placeholder="e.g. 1402711929581835"
+                                           invisible="provider_type != 'meta_cloud'" required="provider_type == 'meta_cloud'"/>
+                                    <field name="waba_id" placeholder="e.g. 209384756192837"
+                                           invisible="provider_type != 'meta_cloud'"/>
+                                    <field name="access_token" password="True" placeholder="Paste Permanent System User Token"
+                                           invisible="provider_type != 'meta_cloud'" required="provider_type == 'meta_cloud'"/>
+                                    <field name="api_base_url" invisible="provider_type == 'meta_cloud'"/>
+                                    <field name="api_key" password="True" invisible="provider_type == 'meta_cloud'"/>
+                                </group>
+                                <group string="Webhook Setup">
+                                    <field name="webhook_url" readonly="1" widget="CopyClipboardChar" string="Callback URL"/>
+                                    <field name="webhook_secret" widget="CopyClipboardChar" string="Verify Token" placeholder="Passphrase for webhook verification"/>
+                                </group>
+                            </group>
+                            <div class="alert alert-light border my-2 p-2 px-3 rounded small" invisible="provider_type != 'meta_cloud'">
+                                <div class="fw-bold text-dark mb-1">
+                                    <i class="fa fa-info-circle text-primary me-1"/>
+                                    Meta Developer Portal Setup:
+                                </div>
+                                <div>
+                                    In your Meta App &gt; <strong>WhatsApp &gt; Configuration &gt; Webhook</strong>:
+                                    Paste the <strong>Callback URL</strong> and <strong>Verify Token</strong> above, then subscribe to:
+                                    <code>messages</code>, <code>message_template_status_update</code>, <code>message_deliveries</code>.
+                                </div>
+                            </div>
+                        </page>
+
+                        <page string="Health &amp; Diagnostics" name="diagnostics" invisible="status not in ('active', 'configured', 'error')">
+                            <group>
+                                <group string="Status Checks">
+                                    <field name="token_valid" widget="boolean_toggle" readonly="1"/>
+                                    <field name="phone_status" widget="boolean_toggle" readonly="1"/>
+                                    <field name="webhook_ping_status" widget="boolean_toggle" readonly="1"/>
+                                    <field name="rate_limit_status" widget="boolean_toggle" readonly="1"/>
+                                </group>
+                                <group string="Metrics">
+                                    <field name="latency_ms" readonly="1" string="Round-Trip Latency (ms)"/>
+                                    <field name="quality_rating" readonly="1"/>
+                                    <field name="messaging_tier" readonly="1"/>
+                                    <field name="last_diagnostic_date" readonly="1" string="Last Checked"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Statistics" name="statistics">
+                            <group>
+                                <group string="Message Volume">
+                                    <field name="message_count" string="Total Messages"/>
+                                    <field name="success_count" string="Delivered Successfully"/>
+                                    <field name="failure_count" string="Failed Attempts"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Setup Guide" name="setup_guide">
+                            <div class="p-3">
+                                <h6 class="fw-bold text-dark mb-3">
+                                    <i class="fa fa-book text-primary me-2"/>How to Connect Meta WhatsApp Cloud API
+                                </h6>
+                                <ol class="ps-3 mb-0" style="line-height: 2;">
+                                    <li>Navigate to <a href="https://developers.facebook.com" target="_blank" class="fw-bold">developers.facebook.com</a> and open your Business App.</li>
+                                    <li>Add or select the <strong>WhatsApp</strong> product.</li>
+                                    <li>Under <strong>API Setup</strong>, copy the <strong>Phone Number ID</strong> and paste it into the <em>API Credentials</em> tab.</li>
+                                    <li>Generate a <strong>Permanent System User Access Token</strong> with <code>whatsapp_business_messaging</code> and <code>whatsapp_business_management</code> scopes.</li>
+                                    <li>In <strong>Configuration &gt; Webhook</strong>, paste the <strong>Callback URL</strong> and <strong>Verify Token</strong>.</li>
+                                    <li>Click <strong>Test Connection</strong> in the top header bar to verify and activate.</li>
+                                </ol>
+                            </div>
+                        </page>
+
+                        <page string="Internal Notes" name="notes">
+                            <field name="notes" placeholder="Add internal notes, admin contacts, or provider documentation..."/>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_wa_provider_list" model="ir.actions.act_window">
+        <field name="name">Providers</field>
+        <field name="res_model">whatsapp.automation.provider</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

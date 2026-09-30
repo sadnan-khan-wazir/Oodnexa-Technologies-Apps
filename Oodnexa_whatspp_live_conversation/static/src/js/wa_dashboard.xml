@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="Oodnexa_whatspp_live_conversation.Dashboard">
+        <div class="o_wa_dashboard o_action">
+            <div class="container-fluid py-3">
+                <h2 class="mb-4">
+                    <i class="fa fa-whatsapp text-success me-2"/>
+                    WhatsApp Automation Dashboard
+                </h2>
+                <t t-if="state.loading">
+                    <div class="text-center py-5">
+                        <i class="fa fa-spinner fa-spin fa-3x"/>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-3">
+                            <div class="wa-stat-card" t-on-click="() => this.openMessages()">
+                                <div class="wa-stat-value" t-esc="state.totalMessages"/>
+                                <div class="wa-stat-label">Total Messages</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="wa-stat-card" t-on-click="() => this.openMessages('sent')">
+                                <div class="wa-stat-value" t-esc="state.sentCount"/>
+                                <div class="wa-stat-label">Sent</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="wa-stat-card" t-on-click="() => this.openMessages('delivered')">
+                                <div class="wa-stat-value" t-esc="state.deliveredCount"/>
+                                <div class="wa-stat-label">Delivered</div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="wa-stat-card wa-stat-danger" t-on-click="() => this.openMessages('failed')">
+                                <div class="wa-stat-value" t-esc="state.failedCount"/>
+                                <div class="wa-stat-label">Failed</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <div class="wa-stat-card wa-stat-warning" t-on-click="() => this.openQueue()">
+                                <div class="wa-stat-value" t-esc="state.queuedCount"/>
+                                <div class="wa-stat-label">In Queue</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="wa-stat-card wa-stat-info" t-on-click="() => this.openRules()">
+                                <div class="wa-stat-value" t-esc="state.activeRules"/>
+                                <div class="wa-stat-label">Active Rules</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="wa-stat-card">
+                                <div class="wa-stat-value" t-esc="state.activeProviders"/>
+                                <div class="wa-stat-label">Active Providers</div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+</templates>

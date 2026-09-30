@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_whatsapp_api" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.whatsapp.api</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_quotation_send']" position="after">
+                <button name="action_open_whatsapp_wizard"
+                        type="object"
+                        string="Send WhatsApp"
+                        class="btn-secondary"
+                        icon="fa-whatsapp"
+                        groups="Oodnexa_whatspp_live_conversation.group_wa_user"/>
+                <button name="action_open_whatsapp_chat"
+                        type="object"
+                        string="WhatsApp Chat"
+                        class="btn-secondary"
+                        icon="fa-comments"
+                        groups="Oodnexa_whatspp_live_conversation.group_wa_user"/>
+            </xpath>
+
+        </field>
+    </record>
+</odoo>

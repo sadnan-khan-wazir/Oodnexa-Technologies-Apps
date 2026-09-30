@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ============================================================ -->
+    <!--                    TOP-LEVEL MENU                             -->
+    <!-- ============================================================ -->
+    <menuitem id="menu_wa_root"
+              name="WhatsApp"
+              web_icon="Oodnexa_whatspp_live_conversation,static/description/icon.png"
+              sequence="200"
+              groups="Oodnexa_whatspp_live_conversation.group_wa_user"/>
+
+    <!-- Sub-menus -->
+    <menuitem id="menu_wa_messaging"
+              name="Messages"
+              parent="menu_wa_root"
+              sequence="10"
+              groups="Oodnexa_whatspp_live_conversation.group_wa_user"/>
+
+    <menuitem id="menu_wa_config"
+              name="Configuration"
+              parent="menu_wa_root"
+              sequence="20"
+              groups="Oodnexa_whatspp_live_conversation.group_wa_admin"/>
+
+    <!-- Messaging Sub-menus -->
+    <menuitem id="menu_wa_conversations"
+              name="Live Conversations"
+              parent="menu_wa_messaging"
+              action="action_wa_live_console"
+              sequence="0"/>
+
+    <menuitem id="menu_wa_conversations_kanban"
+              name="All Conversations (Kanban)"
+              parent="menu_wa_messaging"
+              action="action_wa_conversation_list"
+              sequence="1"/>
+
+    <menuitem id="menu_wa_messages"
+              name="Sent Messages"
+              parent="menu_wa_messaging"
+              action="action_wa_message_list"
+              sequence="2"/>
+
+
+    <menuitem id="menu_wa_logs"
+              name="API Logs"
+              parent="menu_wa_messaging"
+              action="action_wa_log_list"
+              sequence="3"/>
+
+    <!-- Configuration Sub-menus -->
+    <menuitem id="menu_wa_templates"
+              name="Templates"
+              parent="menu_wa_config"
+              action="action_wa_template_list"
+              sequence="1"/>
+
+    <menuitem id="menu_wa_providers"
+              name="Providers"
+              parent="menu_wa_config"
+              action="action_wa_provider_list"
+              sequence="2"/>
+
+    <menuitem id="menu_wa_settings"
+              name="Settings"
+              parent="menu_wa_config"
+              action="action_wa_settings"
+              sequence="10"/>
+</odoo>
